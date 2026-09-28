@@ -38,7 +38,7 @@ On economics, CAIT reports Diwali 2025 trade of six point zero five lakh crore r
 
 ## Slide 10: 4. Public blog and reception
 
-The blog article is written, with every chart footnoted to its source, and it is ready to publish on LinkedIn or Medium. Engagement is tracked in an audit log that counts only readers from outside our institution. This slide updates automatically once the post is live.
+The article is live on Medium, published on 28 September 2026. It has 0 external reactions and comments, working towards the target of 40, and we replied to 0 comments.
 
 ## Slide 11: Key takeaways
 

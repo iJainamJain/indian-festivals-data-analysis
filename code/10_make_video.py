@@ -47,7 +47,10 @@ def slide(i, title, bullets=None, image=None, subtitle=None):
     fig.text(0.03, 0.02, "Jainam Jain  |  Vrushan Patil  |  Dhanush Chowke  |  Aditya Tambe  |  Vivek Jaiswal  |  B.E. ECS, VIT  |  DAV Project", fontsize=13, color=vs.INK2)
     p = os.path.join(S, f"slide_{i:02d}.png"); fig.savefig(p, dpi=100, bbox_inches=None); plt.close(fig); return p
 
-eng_line = (f"The article is live at {eng['live_url']}. It has {eng['external_interactions']} external reactions and comments, "
+_meta = json.load(open(os.path.join(ROOT, "blog", "engagement", "post_meta.json"), encoding="utf-8"))
+_plat = _meta.get("platform", "Medium")
+_short = eng["live_url"].split("//")[-1].split("/what")[0] if eng["live_url"] != "NOT YET PUBLISHED" else ""
+eng_line = (f"The article is live on {_plat}, published on {pd.Timestamp(eng['published_on']).strftime('%d %B %Y')}. It has {eng['external_interactions']} external reactions and comments, "
             f"{'meeting' if eng['target_met'] else 'working towards'} the target of 40, and we replied to {eng['comments_with_author_reply']} comments."
             if eng["live_url"] != "NOT YET PUBLISHED" else
             "The blog article is written, with every chart footnoted to its source, and it is ready to publish on LinkedIn or Medium. "
@@ -116,7 +119,7 @@ SL = [
           "but rarely for Eid, Christmas, Gurpurab or tribal festivals. That gap reflects what gets measured, not what matters."),
  dict(title="4. Public blog and reception",
       bullets=["Visually rich article with 9 charts and interactive versions, every figure footnoted",
-               f"Status: {'LIVE: ' + eng['live_url'] if eng['live_url'] != 'NOT YET PUBLISHED' else 'ready to publish on LinkedIn / Medium'}",
+               f"Status: {'Live on ' + _plat + ', ' + pd.Timestamp(eng['published_on']).strftime('%d %b %Y') + ' (' + _short + ')' if eng['live_url'] != 'NOT YET PUBLISHED' else 'ready to publish on LinkedIn / Medium'}",
                f"External interactions logged: {eng['external_interactions']} of 40 target (same-institution peers excluded)",
                f"Comments answered by author: {eng['comments_with_author_reply']}"],
       say=eng_line),
