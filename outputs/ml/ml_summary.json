@@ -1,0 +1,125 @@
+{
+ "A": {
+  "best_k": 4,
+  "silhouette": 0.4132,
+  "bootstrap_ARI_mean": 0.6101140437259867,
+  "bootstrap_ARI_sd": 0.27509847271507515,
+  "ARI_clusters_vs_geographic_region": 0.0272187080697719,
+  "clusters": {
+   "C1: above-avg Christian holiday share": [
+    "Arunachal Pradesh",
+    "Goa",
+    "Mizoram",
+    "Nagaland"
+   ],
+   "C2: above-avg Hindu holiday share": [
+    "Andhra Pradesh",
+    "Assam",
+    "Bihar",
+    "Gujarat",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Odisha",
+    "Punjab-Haryana-Chandigarh",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal"
+   ],
+   "C3: above-avg Muslim holiday share": [
+    "Chhattisgarh",
+    "Delhi",
+    "Jammu & Kashmir",
+    "Kerala"
+   ],
+   "C4: above-avg Tribal Indigenous holiday share": [
+    "Manipur",
+    "Meghalaya",
+    "Tripura"
+   ]
+  }
+ },
+ "B": {
+  "best_model": "Random Forest",
+  "cv": "5-fold x 20 repeats, stratified",
+  "n_festivals": 99,
+  "metrics": {
+   "Majority baseline": {
+    "accuracy_mean": 0.4547,
+    "macro_precision_mean": 0.1137,
+    "macro_recall_mean": 0.25,
+    "macro_f1_mean": 0.1563,
+    "macro_f1_sd": 0.0022
+   },
+   "Logistic Regression": {
+    "accuracy_mean": 0.4338,
+    "macro_precision_mean": 0.42,
+    "macro_recall_mean": 0.4242,
+    "macro_f1_mean": 0.4,
+    "macro_f1_sd": 0.1062
+   },
+   "Random Forest": {
+    "accuracy_mean": 0.4641,
+    "macro_precision_mean": 0.4189,
+    "macro_recall_mean": 0.4245,
+    "macro_f1_mean": 0.4039,
+    "macro_f1_sd": 0.1049
+   }
+  }
+ },
+ "C": {
+  "n_train": 15,
+  "R2_in_sample_log": 0.9927782186497129,
+  "LOO_RMSE_log": 0.2807018681287975,
+  "LOO_MAPE_pct": 20.218497702874373,
+  "annual_growth_pct": 35.51224468655057,
+  "projection_premium_pct": -19.0976565008707,
+  "holdout_2026": [
+   {
+    "festival": "Raksha Bandhan",
+    "value": 30000.0,
+    "predicted_inr_crore": 23046.0,
+    "abs_pct_error": 23.2
+   },
+   {
+    "festival": "Holi",
+    "value": 80000.0,
+    "predicted_inr_crore": 77716.0,
+    "abs_pct_error": 2.9
+   }
+  ],
+  "forecast_2026": [
+   {
+    "festival": "Diwali (Deepavali)",
+    "year": 2026,
+    "forecast_inr_crore": 764209.0
+   },
+   {
+    "festival": "Ganesh Chaturthi",
+    "year": 2026,
+    "forecast_inr_crore": 65401.0
+   },
+   {
+    "festival": "Holi",
+    "year": 2026,
+    "forecast_inr_crore": 96061.0
+   },
+   {
+    "festival": "Karva Chauth",
+    "year": 2026,
+    "forecast_inr_crore": 38534.0
+   },
+   {
+    "festival": "Raksha Bandhan",
+    "year": 2026,
+    "forecast_inr_crore": 28486.0
+   }
+  ]
+ }
+}

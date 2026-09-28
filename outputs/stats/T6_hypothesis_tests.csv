@@ -1,0 +1,16 @@
+id,question,test,statistic,df,p_value,effect_size,result,interpretation
+H1,Festival holiday-days uniformly distributed across months?,"Chi-square goodness-of-fit (12 months, weighted office-days)",551.1548,11.0,0.0,,Reject H0,"Peak months: Mar, Oct, Apr"
+H2,Is a festival's season independent of its tradition?,"Chi-square test of independence (+5,000-permutation p)",7.719,9.0,0.57788,0.1612,Fail to reject H0,Cramer's V = 0.16; asymptotic p = 0.563; 7 cells expected<5 -> permutation p reported
+H3-Hindu,State holiday share for Hindu festivals correlates with Hindu population share?,Spearman rank correlation (n=29 states/UTs),0.5752,27.0,0.0011,0.5752,Reject H0,slope 0.26 holiday-pp per population-pp
+H3-Muslim,State holiday share for Muslim festivals correlates with Muslim population share?,Spearman rank correlation (n=29 states/UTs),0.4225,27.0,0.02243,0.4225,Reject H0,slope 0.27 holiday-pp per population-pp
+H3-Christian,State holiday share for Christian festivals correlates with Christian population share?,Spearman rank correlation (n=29 states/UTs),0.5316,27.0,0.003,0.5316,Reject H0,slope 0.24 holiday-pp per population-pp
+H3-Sikh,State holiday share for Sikh festivals correlates with Sikh population share?,Spearman rank correlation (n=29 states/UTs),0.5365,27.0,0.0027,0.5365,Reject H0,slope 0.28 holiday-pp per population-pp
+H3-Buddhist,State holiday share for Buddhist festivals correlates with Buddhist population share?,Spearman rank correlation (n=29 states/UTs),0.7094,27.0,2e-05,0.7094,Reject H0,slope 0.66 holiday-pp per population-pp
+H3-Jain,State holiday share for Jain festivals correlates with Jain population share?,Spearman rank correlation (n=29 states/UTs),0.6395,27.0,0.00019,0.6395,Reject H0,slope 4.66 holiday-pp per population-pp
+H4,Does festival geographic reach differ across tradition groups?,Kruskal-Wallis H (identifiable-reach festivals),7.251,3.0,0.06431,0.0759,Fail to reject H0,"epsilon^2 effect size; medians: Abrahamic (Muslim, Christian)=2.2; Hindu=1.8; Other (Sikh, Buddhist, Jain, Parsi, multi-faith)=1.6; Tribal/Indigenous=1.0"
+H5,Do lunar/moving-date festivals reach more states than fixed-date ones?,Mann-Whitney U,885.5,,0.2703,-0.153,Fail to reject H0,median lunar 1.78 (n=64) vs fixed 1.37 (n=24); effect = rank-biserial
+H6-hol_days,Does festival holidays/yr differ across the 6 regions?,Kruskal-Wallis H,3.788,5.0,0.58032,-0.0527,Fail to reject H0,Central=14.95; East=17.65; North=14.66; North-East=15.56; South=15.32; West=14.45
+H6-holiday_,Does holiday diversity (Shannon) differ across the 6 regions?,Kruskal-Wallis H,4.5872,5.0,0.4683,-0.0179,Fail to reject H0,Central=1.69; East=1.50; North=1.47; North-East=1.53; South=1.51; West=1.52
+H7,Are religiously more diverse states (Census) also more diverse in festival holidays?,Spearman rank correlation,0.2483,27.0,0.19401,0.2483,Fail to reject H0,
+H8,Are post-monsoon (Oct-Dec) festivals associated with larger trade than other seasons?,Mann-Whitney U on log trade (national CAIT-type estimates),52.0,,0.1088,-0.4857,Fail to reject H0,"median post-monsoon INR 125,000 cr (n=7) vs other INR 27,386 cr (n=10)"
+H9,Has reported festive trade grown significantly over time (2018-2026)?,OLS log(trade) ~ year + festival fixed effects,12.469,11.0,0.0,0.3399,Reject H0,"implied growth 34.0%/yr (95% CI 27.2 to 41.1); R^2=0.990, n=17"

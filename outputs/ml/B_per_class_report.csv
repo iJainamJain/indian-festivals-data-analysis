@@ -1,0 +1,5 @@
+class,precision,recall,f1,support
+Abrahamic (Muslim/Christian),0.375,0.429,0.4,14
+Hindu,0.6,0.533,0.565,45
+Other (Sikh/Buddhist/Jain/Parsi/multi-faith),0.176,0.167,0.171,18
+Tribal/Indigenous,0.538,0.636,0.583,22

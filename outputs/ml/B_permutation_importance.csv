@@ -1,0 +1,15 @@
+,0
+n_regions,0.0056
+region_share_Central,0.0089
+mean_holiday_days,0.0109
+is_moving_date,0.0224
+log_expected_states,0.0243
+region_share_West,0.0294
+region_share_North,0.031
+month_sin,0.0403
+date_drift_days,0.0407
+region_share_East,0.0434
+region_share_South,0.0446
+month_cos,0.0552
+share_shared_date,0.1198
+region_share_North-East,0.1281

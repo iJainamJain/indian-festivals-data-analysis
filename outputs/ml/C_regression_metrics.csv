@@ -1,0 +1,8 @@
+metric,value
+n_train (<=2025),15.0
+in_sample_R2 (log),0.9928
+LOO_RMSE (log units),0.2807
+LOO_MAPE_%,20.2185
+implied_annual_growth_%,35.5122
+holdout_2026_MAPE_%,13.05
+holdout_2026_RMSE_INR_crore,5175.6532

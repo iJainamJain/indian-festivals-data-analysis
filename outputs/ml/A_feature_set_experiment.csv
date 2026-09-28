@@ -1,0 +1,4 @@
+feature_set,n_features,silhouette_k2,silhouette_k3,silhouette_k4,silhouette_k5,silhouette_k6,silhouette_k7
+all 9 tradition shares,9,0.255,0.1978,0.1722,0.2727,0.2606,0.2241
+9 shares + 12 month shares + size + diversity,23,0.1909,0.1089,0.1154,0.1056,0.1146,0.1118
+4 major tradition shares (selected),4,0.4267,0.3967,0.4132,0.3275,0.3297,0.3239

@@ -1,0 +1,63 @@
+table,column,type,description,source
+data/raw/rbi_holiday_matrix_raw.csv,year,int,Calendar year of the holiday,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,month,int,Month 1-12,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,day,int,Day of month,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,date,date,ISO date,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,rbi_regional_office,str,RBI regional office (34) whose jurisdiction observes the holiday,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,rbi_holiday_description,str,RBI's label for all holidays on that date across India ('|' joins multiple labels),RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,holiday_type,str,Always 'NI Act holiday' (Negotiable Instruments Act); account-closing days excluded,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,source_url,str,Exact page + POST parameters used,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,source_publisher,str,Reserve Bank of India,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/raw/rbi_holiday_matrix_raw.csv,retrieved_on,date,Scrape date,code/01_scrape_rbi_holidays.py
+data/raw/festival_wikipedia_attribution.csv,festival,str,Canonical festival name (code/festival_catalog.py),Derived (code/04_build_clean_dataset.py)
+data/raw/festival_wikipedia_attribution.csv,wiki_title_requested / wiki_title_resolved,str,Article requested / article actually returned,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/raw/festival_wikipedia_attribution.csv,wiki_url,url,Article URL,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/raw/festival_wikipedia_attribution.csv,wiki_observed_by,str,Infobox 'Observed by' text,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/raw/festival_wikipedia_attribution.csv,wiki_type / wiki_significance / wiki_frequency / wiki_duration,str,Infobox fields,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/raw/economic_footfall_raw.csv (.json),record_id,str,ECO001..,Derived (code/04_build_clean_dataset.py)
+data/raw/economic_footfall_raw.csv (.json),festival,str,Festival / event,per-row source_url
+data/raw/economic_footfall_raw.csv (.json),tradition,str,"Tradition of the festival, or 'Global analogue'",per-row source_url
+data/raw/economic_footfall_raw.csv (.json),year,int,Year the figure refers to,per-row source_url
+data/raw/economic_footfall_raw.csv (.json),metric,str,festive_trade | creative_economy | festive_economy | footfall | temple_revenue | special_trains | sector_share_of_goods_sales | sector_trade | gold_trade | silver_trade | dhanteras_* | ecommerce_gmv | retail_sales | tourism_spending,Derived (code/04_build_clean_dataset.py)
+data/raw/economic_footfall_raw.csv (.json),value / unit,float/str,"Figure exactly as published (INR crore, persons, percent, USD/CNY billion, trains)",per-row source_url
+data/raw/economic_footfall_raw.csv (.json),geography,str,Area the figure covers,per-row source_url
+data/raw/economic_footfall_raw.csv (.json),sector,str,"Market sector (retail, jewellery, travel, FMCG...)",per-row source_url
+data/raw/economic_footfall_raw.csv (.json),estimate_type,str,reported (post-event) or projection (pre-event estimate),per-row source_url
+data/raw/economic_footfall_raw.csv (.json),publisher / source_type / source_url,str,"Who produced the number, kind of source, exact URL",-
+data/raw/economic_footfall_raw.csv (.json),note,str,Extra context quoted from the source,per-row source_url
+data/raw/economic_footfall_raw.csv (.json),verified_on,date,Date the page was opened and the figure confirmed,-
+data/processed/festival_observations.csv,"year, date, month, day, day_of_year",int/date,Calendar fields,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/processed/festival_observations.csv,season_imd,str,"IMD season: Winter (Jan-Feb), Pre-monsoon (Mar-May), Monsoon (Jun-Sep), Post-monsoon (Oct-Dec)",India Meteorological Department definition
+data/processed/festival_observations.csv,"rbi_regional_office, state, region",str,"Office, mapped State/UT (jurisdiction) and 6-way region",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,festival,str,Canonical festival resolved from description by regex,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,tradition,str,Hindu | Muslim | Christian | Sikh | Buddhist | Jain | Parsi | Tribal/Indigenous | Cultural (multi-faith),Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/processed/festival_observations.csv,festival_type,str,Religious | Harvest | New Year | Seasonal | Commemoration | Cultural,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,attribution,str,unique = festival was the only item in RBI label; shared_date = co-listed with other festivals/civic days,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,n_items_on_date,int,Festivals + civic items co-listed on that date,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,attribution_weight,float,1 / n_items_on_date - fractional share of the closure attributed to this festival,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"festival, tradition, festival_type",str,Identity & classification,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/processed/festival_master.csv,years_observed,int,Years (of 2024-26) with at least one observation,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,states_upper_per_year,float,Upper bound: states whose office closed on a date whose label names the festival,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,states_confirmed_max / states_confirmed_any_year,int,States observing it on dates where it was the ONLY label,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,reach_identifiable,bool,False when the festival never appears alone in RBI labels (reach cannot be separated),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,expected_states_per_year,float,"MAIN reach metric: sum over states of max attribution weight, averaged over years",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,national_reach_pct,float,Expected states / 29 x 100,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"n_regions, regions, states",int/str,Geographic footprint,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"modal_month, months_observed, modal_season_imd",int/str,Timing,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,date_drift_days,float,Range of first-observed day-of-year across 2024-26 (0-1 => fixed Gregorian date),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,calendar_basis,str,Gregorian (fixed) | Lunar/Lunisolar (moving) | Undetermined (1 year),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"mean_holiday_days, max_holiday_days",float/int,Duration: consecutive holiday days per office-year,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"total_office_holiday_days, weighted_holiday_days, share_shared_date",int/float,Volume of observations,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,"wiki_* , attribution_url, attribution_publisher",str,Source grounding of the tradition label,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
+data/processed/festival_master.csv,"primary_source_url, primary_source_publisher",str,RBI,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
+data/processed/festival_master.csv,"latest_trade_inr_crore, latest_trade_year, trade_source_url",float/int/url,"Most recent trade/economy figure, if any",economic_footfall_raw.csv
+data/processed/state_profile.csv,"state, region, n_rbi_offices",str/int,"State/UT (Punjab, Haryana & Chandigarh combined = RBI Chandigarh office)",Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,hol_days_<tradition>,float,Festival holiday-days per office per year attributed to each tradition (weighted),Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,hol_days_total_festival,float,Total festival holiday-days per office per year,Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,hol_share_<tradition>,float,% of the state's festival holidays per tradition,Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,holiday_diversity_shannon,float,Shannon entropy of hol_share over traditions,Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,n_distinct_festivals,int,Distinct festivals observed 2024-26,Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,census_pct_<religion>,float,"Religion share of population, Census 2011 (Telangana uses undivided AP)","Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"
+data/processed/state_profile.csv,pop_total,int,Census 2011 population,"Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"
+data/processed/state_profile.csv,population_diversity_shannon,float,Shannon entropy of census shares,code/05_eda_statistics.py
+data/processed/state_profile.csv,census_source_url,url,Census table URL,"Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"

@@ -1,0 +1,8 @@
+,n,mean,median,std,min,q1,q3,max,iqr,cv_pct,skewness,kurtosis
+festival_expected_states_per_year,99.0,4.11,1.27,6.32,0.33,0.92,4.08,29.0,3.16,153.85,2.44,5.21
+festival_mean_holiday_days (duration),99.0,1.03,1.0,0.09,1.0,1.0,1.0,1.63,0.0,8.5,4.44,23.22
+festival_date_drift_days (moving festivals),64.0,23.19,19.0,43.7,6.0,16.75,22.0,365.0,5.25,188.44,7.65,57.38
+state_festival_holidays_per_year (frequency),29.0,15.39,15.32,2.49,11.27,14.15,16.63,21.23,2.47,16.16,0.27,-0.27
+state_holiday_diversity_shannon,29.0,1.54,1.52,0.14,1.28,1.44,1.65,1.88,0.21,9.15,0.46,-0.21
+state_distinct_festivals_2024_26,29.0,34.97,35.0,5.68,19.0,31.0,39.0,45.0,8.0,16.24,-0.52,0.4
+festive_trade_INR_crore (spending),18.0,118166.67,37500.0,173144.7,3000.0,18250.0,113750.0,605000.0,95500.0,146.53,1.77,1.88

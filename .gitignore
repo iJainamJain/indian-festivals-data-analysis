@@ -1,0 +1,9 @@
+# personal data of commenters - kept for submission only, never public
+blog/engagement/screenshots/
+blog/engagement/engagement_log.csv
+# regenerable clutter
+__pycache__/
+*.pyc
+video/audio/
+~$*
+blog/engagement/engagement_audit_report.md
