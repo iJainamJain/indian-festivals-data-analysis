@@ -16,6 +16,8 @@ Zero synthetic records: every row traces to RBI, Census of India, Wikipedia/Govt
 ## Known limitations
 
 * RBI labels list every holiday on a date nationwide, not per office. Where several festivals share a date the closure is split equally (attribution_weight); 39 of 99 festivals never appear alone, so their reach is flagged not identifiable.
+* **Sundays are not listed.** The RBI matrix contains no Sunday dates (banks are closed anyway), so a festival that falls on a Sunday is absent for that year - e.g. Ram Navami 2025, Muharram 2025, Mahavir Jayanti 2024, Maha Shivaratri 2026. About one festival-day in seven is missing in any single year; all per-year averages divide by three years and are therefore conservative (national total 15.5 festival-days per office per year; about 17.4 if each festival is averaged only over the years it appears).
+* **Scope of 'holiday'.** Only holidays notified under the Negotiable Instruments Act are covered. Holidays for government offices or schools only, restricted (optional) holidays and district-level local holidays are not. Holidays declared later in the year ARE included when RBI adds them (33 such dates in the data: elections, heavy rain, state mourning); the 2026 list reflects what was published on the scrape date.
 * Bank holidays measure *official recognition*, not participation. Census 2011 is the latest published religion census.
 * Trade figures are industry-body estimates (mostly CAIT surveys), many are pre-event projections; comparable national figures are not published for most non-Hindu festivals - itself a finding on measurement bias.
 
