@@ -17,23 +17,23 @@ CATALOG = {
     # ---------------- Hindu ----------------
     "Diwali (Deepavali)": (r"Diwali|Deepawali|Deepavali|Naraka Chaturdashi|Kali Puja|Govardhan|Bali Pratipada|Balipadyami|Laxmi Puja \(Deepawali\)",
                            "Hindu", "Religious", "Diwali"),
-    "Bhai Dooj": (r"Bhai ?Bij|Bhaidooj|Bhratridwitiya|Chitragupt", "Hindu", "Religious", "Bhai Dooj"),
+    "Bhai Dooj": (r"Bhai ?Bij|Bhai Duj|Bhaidooj|Bhratridwitiya|Chitragupt", "Hindu", "Religious", "Bhai Dooj"),
     "Vikram Samvat New Year": (r"Vikram Samvant", "Hindu", "New Year", "Vikram Samvat"),
     "Kojagari Lakshmi Puja": (r"^(?!.*(Diwali|Deepawali)).*(Lakshmi Puja|Laxmi Puja)", "Hindu", "Religious", "Sharad Purnima"),
-    "Holi": (r"Holi\b|Holi \(|Dhulandi|Dhuleti|Dol Jatra|Holika Dahan", "Hindu", "Religious/Seasonal", "Holi"),
-    "Navratri / Durga Puja / Dussehra": (r"Dussehra|Dusshera|Dasara|Vijaya ?Dash|Vijayadas|Durga Puja|Durga Ashtami|Maha Ashtami|Maha Saptami|Maha ?[Nn]avami|Mahanavami|Ayu[dt]ha ?[Pp]ooja|Ayudhapooja|Navaratri Ends|Navratra Sthapna",
+    "Holi": (r"Holi\b|Holi \(|Dhulandi|Dhuleti|Dol ?[Jj]atra|Holika Dahan", "Hindu", "Religious/Seasonal", "Holi"),
+    "Navratri / Durga Puja / Dussehra": (r"Dussehra|Dusshera|Dasara|Vijaya ?Das|Vijayadas|Durga Puja|Durga Ashtami|Maha Ashtami|Maha Saptami|Maha ?[Nn]avami|Mahanavami|Ayu[dt]ha ?[Pp]ooja|Ayudhapooja|Navaratri Ends|Navratra Sthapna|Navtatri Sthapna",
                                          "Hindu", "Religious", "Durga Puja"),
     "Mahalaya": (r"Mahalaya", "Hindu", "Religious", "Mahalaya"),
     "Ganesh Chaturthi": (r"Ganesh|Vinayak|Varasiddhi", "Hindu", "Religious", "Ganesh Chaturthi"),
     "Hartalika Teej": (r"Hartalika", "Hindu", "Religious", "Teej"),
-    "Janmashtami": (r"Janmashtami|Krishna Jayanthi", "Hindu", "Religious", "Krishna Janmashtami"),
+    "Janmashtami": (r"Janmashtami|Krishna Jayanthi|Krishna Ashtami", "Hindu", "Religious", "Krishna Janmashtami"),
     "Raksha Bandhan": (r"Raksha Bandhan|Jhulana Purnima", "Hindu", "Religious", "Raksha Bandhan"),
     "Maha Shivaratri": (r"[Ss]hivratri|Sivarathri", "Hindu", "Religious", "Maha Shivaratri"),
     "Ram Navami": (r"Ram Navami", "Hindu", "Religious", "Rama Navami"),
     "Chaitra Navratri (1st day)": (r"1st Navratra", "Hindu", "Religious", "Chaitra Navaratri"),
-    "Makar Sankranti": (r"Makar|Uttarayana|Maghe Sankranti", "Hindu", "Harvest", "Makar Sankranti"),
+    "Makar Sankranti": (r"Makar|Uttarayana|Maghe Sankranti|(^|/| \| )Sankranti", "Hindu", "Harvest", "Makar Sankranti"),
     "Pongal": (r"Pongal(?!a)|Uzhavar|Kanuma|Thiruvalluvar", "Hindu", "Harvest", "Pongal (festival)"),
-    "Chhath Puja": (r"Chh?ath|Surya Shashti", "Hindu", "Religious", "Chhath"),
+    "Chhath Puja": (r"Chh?ath(?!ur)|Surya [SP]ash?ti", "Hindu", "Religious", "Chhath"),
     "Saraswati Puja / Vasant Panchami": (r"Saraswati|Basanta Panchami", "Hindu", "Religious", "Vasant Panchami"),
     "Karva Chauth": (r"Karva Chauth", "Hindu", "Religious", "Karva Chauth"),
     "Rath Yatra": (r"Rath", "Hindu", "Religious", "Ratha Yatra (Puri)"),
@@ -55,11 +55,11 @@ CATALOG = {
     "Kanakadasa Jayanti": (r"Kanakadasa", "Hindu", "Commemoration", "Kanaka Dasa"),
     "Sant Ravidas Jayanti": (r"Ravidas|Ravi Das", "Hindu", "Commemoration", "Ravidas Jayanti"),
     "Sant Kabir Jayanti": (r"Kabir", "Hindu", "Commemoration", "Kabir"),
-    "Sree Narayana Guru Jayanti / Samadhi": (r"Narayana Guru", "Hindu", "Commemoration", "Narayana Guru"),
-    "Maharaja Agrasen Jayanti": (r"Agrasen", "Hindu", "Commemoration", "Agrasen"),
+    "Sree Narayana Guru Jayanti / Samadhi": (r"Nara[yv]ana Guru", "Hindu", "Commemoration", "Narayana Guru"),
+    "Maharaja Agrasen Jayanti": (r"Agrasen|Agarsain", "Hindu", "Commemoration", "Agrasen"),
     "Kati Bihu": (r"Kati Bihu", "Hindu", "Harvest", "Kati Bihu"),
-    "Gudi Padwa / Ugadi": (r"Gudhi Padwa|Ugadi|Telugu New Year", "Hindu", "New Year", "Ugadi"),
-    "Maha Vishuva Sankranti (Odia New Year)": (r"Maha Vishuva", "Hindu", "New Year", "Pana Sankranti"),
+    "Gudi Padwa / Ugadi": (r"Gudh?i Padwa|Ugadi|Telugu New Year", "Hindu", "New Year", "Ugadi"),
+    "Maha Vishuva Sankranti (Odia New Year)": (r"Maha Vishuva|Maha Bisubha", "Hindu", "New Year", "Pana Sankranti"),
     "Tamil New Year (Puthandu)": (r"Tamil New Year", "Hindu", "New Year", "Puthandu"),
     "Vishu": (r"Vishu\b", "Hindu", "New Year", "Vishu"),
     # ---------------- Cultural / multi-faith regional ----------------
@@ -68,12 +68,12 @@ CATALOG = {
     "Magh Bihu": (r"Magh Bihu", "Cultural (multi-faith)", "Harvest", "Magh Bihu"),
     "Bengali New Year (Pohela Boishakh)": (r"Bengali New Year", "Cultural (multi-faith)", "New Year", "Pohela Boishakh"),
     # ---------------- Muslim ----------------
-    "Eid-ul-Fitr": (r"Id-Ul-Fitr|Eid-Ul-Fitr|Ramzan-Id|Khutub-E-Ramzan", "Muslim", "Religious", "Eid al-Fitr"),
-    "Eid-ul-Adha (Bakrid)": (r"Bakri|Id-Uz-Zuha|Id-ul-Zuha|Adha", "Muslim", "Religious", "Eid al-Adha"),
-    "Milad-un-Nabi": (r"Milad|Baravafat|bara vafat", "Muslim", "Religious", "Mawlid"),
+    "Eid-ul-Fitr": (r"Id-Ul-Fitr|Eid-Ul-Fitr|Ramzan-Id|Ramjan-Eid|Khutub-E-Ramzan", "Muslim", "Religious", "Eid al-Fitr"),
+    "Eid-ul-Adha (Bakrid)": (r"Bakri|Id-Uz-Zuha|Id-[Uu]l-Zuha|Adha|Azha", "Muslim", "Religious", "Eid al-Adha"),
+    "Milad-un-Nabi": (r"Milad|Meelad|Baravafat|[Bb]ara [Vv]afat", "Muslim", "Religious", "Mawlid"),
     "Muharram / Ashura": (r"Muharram|Moharam|Ashoora", "Muslim", "Religious", "Ashura"),
     "Jumat-ul-Vida": (r"Jumat-ul-Vida", "Muslim", "Religious", "Jumu'atul-Wida"),
-    "Shab-e-Qadr": (r"Shab-I-Qadr", "Muslim", "Religious", "Laylat al-Qadr"),
+    "Shab-e-Qadr": (r"Shab-[Il]-Qadr", "Muslim", "Religious", "Laylat al-Qadr"),
     "Birthday of Hazrat Ali": (r"Hazr?a?t Ali|Hazarat Ali", "Muslim", "Commemoration", "Ali"),
     # ---------------- Christian ----------------
     "Christmas": (r"Christmas(?! Eve)", "Christian", "Religious", "Christmas"),
@@ -88,17 +88,18 @@ CATALOG = {
     "Guru Gobind Singh Jayanti": (r"Gobind Singh", "Sikh", "Religious", "Guru Gobind Singh"),
     "Martyrdom Day of Guru Arjan Dev": (r"Arjun Dev", "Sikh", "Commemoration", "Guru Arjan"),
     "Guru Hargobind Jayanti": (r"Hargobind", "Sikh", "Commemoration", "Guru Hargobind"),
-    "Baisakhi (Vaisakhi)": (r"Baisakhi", "Sikh", "Harvest", "Vaisakhi"),
+    "Baisakhi (Vaisakhi)": (r"Baisakhi|Vaisakhi", "Sikh", "Harvest", "Vaisakhi"),
     # ---------------- Jain ----------------
     "Mahavir Jayanti": (r"Mahavir", "Jain", "Religious", "Mahavir Janma Kalyanak"),
     "Samvatsari (Paryushan)": (r"Samvatsari", "Jain", "Religious", "Samvatsari"),
     # ---------------- Buddhist ----------------
-    "Buddha Purnima": (r"Buddha Pournima", "Buddhist", "Religious", "Buddha's Birthday"),
+    "Buddha Purnima": (r"Buddha Pournima|Buddha Purnima", "Buddhist", "Religious", "Buddha's Birthday"),
     "Losar": (r"\bLosar\b", "Buddhist", "New Year", "Losar"),
     "Losoong / Namsoong": (r"Lo+s+o+ng|Namsoong", "Buddhist", "New Year", "Losoong (festival)"),
     "Drukpa Tshe-zi": (r"Drukpa", "Buddhist", "Religious", "Drukpa Tsheshi"),
     "Saga Dawa": (r"Saga Dawa", "Buddhist", "Religious", "Saga Dawa"),
     "Pang Lhabsol": (r"Pang-Lhabsol", "Buddhist", "Religious", "Pang Lhabsol"),
+    "Sonam Lhosar": (r"Sonam Loch?h?ar|Sonam Lhosar", "Buddhist", "New Year", "Sonam Lhosar"),
     # ---------------- Parsi ----------------
     "Parsi New Year (Navroz, Shahenshahi)": (r"Parsi New Year", "Parsi", "New Year", "Nowruz"),
     # ---------------- Tribal / Indigenous ----------------
@@ -117,13 +118,14 @@ CATALOG = {
     "Nyokum": (r"Nyokum", "Tribal/Indigenous", "Religious", "Nyokum"),
     "Lui-Ngai-Ni": (r"Lui-Ngai-Ni", "Tribal/Indigenous", "Seasonal", "Lui-Ngai-Ni"),
     "Gaan-Ngai": (r"Gaan-Ngai", "Tribal/Indigenous", "Religious", "Gaan-Ngai"),
-    "Indigenous Faith Day (Arunachal)": (r"Indigenous Faith Day", "Tribal/Indigenous", "Commemoration", "Donyi-Polo"),
+    "Indigenous Faith Day (Arunachal)": (r"Indigenous Faith [Dd]ay", "Tribal/Indigenous", "Commemoration", "Donyi-Polo"),
     "Tendong Lho Rum Faat": (r"Tendong", "Tribal/Indigenous", "Religious", "Tendong Lho Rum Faat"),
     "Biju / Buisu": (r"Biju|Buisu", "Tribal/Indigenous", "New Year", "Bizu"),
     "Cheiraoba (Meitei New Year)": (r"Cheiraoba", "Tribal/Indigenous", "New Year", "Cheiraoba"),
     "Yaosang": (r"Yaosang", "Tribal/Indigenous", "Religious/Seasonal", "Yaoshang"),
     "Ningol Chakkouba": (r"Ningol Chakkouba", "Tribal/Indigenous", "Cultural", "Ningol Chakouba"),
     "Imoinu Iratpa": (r"Imoinu", "Tribal/Indigenous", "Religious", "Imoinu Iratpa"),
+    "Mera Chaoren Houba": (r"Mera Chaoren Houba", "Tribal/Indigenous", "Religious", "Mera Chaoren Houba"),
 }
 
 # Anything in the RBI description that is not a festival (civic / state days / elections /
@@ -132,6 +134,7 @@ NON_FESTIVAL = (r"Republic Day|Independence Day|Gandhi Jayanti|Ambedkar|May Day|
                 r"State Formation|State Inauguration|Election|Poll day|Birthday of Netaji|Tagore|Nazrul|Vivekananda|"
                 r"Jagjivan|Shivaji|Hari Singh|Bir Bikram|Patel|Birsa Munda|Mookerjee|Raghunath Murmu|Surendrasai|"
                 r"Maharana Pratap|Ayyankali|Mannam|Accession Day|Liberation|Patriot|MHIP|YMA|Tirot|Kiang Nangbah|"
-                r"SoSo Tham|Togan|New Year.?s (Day|Eve)|New Year Celebration|Rajyothsava|Himachal Day|Bihar Di|"
+                r"SoSo Tham|Togan|New Year.?s (Day|Eve|Celebration)|New Year Celebration|Rajyothsava|Rajyotsava|Himachal Day|Bihar Di|"
+                r"Bhanu Jayanti|Cyclone|Demise|G-20|Homage|Maharashtra Day|Netaji|Shaheed|State +Day|Y\.M\.A|"
                 r"close their yearly accounts|rains|Manmohan|Achuthanandan|Consecration|Remna Ni|Thomas Jones|"
                 r"Bank employees in Nagaland|close at 1400")

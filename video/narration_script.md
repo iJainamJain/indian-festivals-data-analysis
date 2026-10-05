@@ -12,11 +12,11 @@ India celebrates hundreds of festivals, but most information about them is scatt
 
 ## Slide 3: An official, source-linked festival dataset
 
-The backbone is the Reserve Bank of India's official holiday list. We collected every bank holiday for all thirty-four regional offices, covering twenty-nine states, for 2024 to 2026. That gave 2,705 festival holiday records across 99 festivals. Each festival's tradition comes from its Wikipedia page or a government portal, and demography comes from Census 2011. We also added 78 spending and crowd figures, each one checked on its original page.
+The backbone is the Reserve Bank of India's official holiday list. We collected every bank holiday for all thirty-four regional offices, covering twenty-nine states, for 2022 to 2026. That gave 3,271 festival holiday records across 101 festivals. Each festival's tradition comes from its Wikipedia page or a government portal, and demography comes from Census 2011. We also added 78 spending and crowd figures, each one checked on its original page.
 
-## Slide 4: How accurate is it? What the RBI list covers, and what it misses
+## Slide 4: Keeping the count fair: what we corrected, and what the data cannot see
 
-How accurate is this data? The RBI list is the official record of bank holidays, and it is updated when holidays are declared later. Our data includes 33 such dates, for elections, heavy rain and state mourning. But it has limits. A holiday that falls on a Sunday is not listed, so roughly one festival day in seven is missing in any single year. Holidays meant only for government offices or schools, optional holidays, and district-level holidays are also not covered. So our numbers measure official bank holiday recognition, not every celebration. We average three years to reduce the Sunday effect.
+How accurate is this data? The RBI list is the official record of bank holidays, and it is updated when holidays are declared later. Our data includes 50 such dates, for elections, heavy rain and state mourning. We corrected two things that could under-count a festival. First, a holiday that falls on a Sunday is not listed, so we average each festival only over the years it could appear. Second, when festivals share a date, a festival that a state is confirmed to observe still counts in full. Holidays meant only for government offices or schools, optional holidays, and district-level holidays are also not covered. Even so, the data measures official bank holiday recognition, not how many people celebrate.
 
 ## Slide 5: India's festival calendar peaks in March, April and October
 
@@ -24,19 +24,19 @@ First, timing. Festival holidays are strongly concentrated. A chi-square test re
 
 ## Slide 6: Holiday counts vary by state, not by region
 
-Next, geography. Sikkim, Uttar Pradesh and Jharkhand have the most festival bank holidays. Goa, Arunachal Pradesh and Delhi have the fewest. The differences are between individual states, not between the six broad regions.
+Next, geography. Uttar Pradesh, Sikkim and Jharkhand have the most festival bank holidays. Arunachal Pradesh, Nagaland and Goa have the fewest. The differences are between individual states, not between the six broad regions.
 
 ## Slide 7: Calendars follow demography, but are more plural than the population
 
-Now, demography. For every faith we tested, a state's share of holidays for that faith rises with its share of the population. The correlations run from zero point four two to zero point seven one, and all are significant. But the calendar is flatter than the population. Hindu festivals are about forty-six percent of festival holidays, against a population share near eighty percent. That is because Christmas, both Eids, Buddha Purnima, Mahavir Jayanti and Guru Nanak Jayanti are recognised almost nationwide.
+Now, demography. For every faith we tested, a state's share of holidays for that faith rises with its share of the population. The correlations run from 0.38 to 0.66, and all are significant. But the calendar is flatter than the population. Hindu festivals are about 49 percent of festival holidays, against a population share near eighty percent. That is because Christmas, both Eids, Buddha Purnima, Mahavir Jayanti and Guru Nanak Jayanti are recognised almost nationwide.
 
-## Slide 8: Model 1: states group by calendar culture, not geography
+## Slide 8: Model 1: one distinct group of states, and a continuum
 
-For machine learning, we first clustered states by the mix of their festival calendar. K-Means selected 4 clusters, with a silhouette score of 0.41. Resampling shows the groups are reasonably stable. And they hardly match geographic regions. Neighbouring states often celebrate differently.
+For machine learning, we first clustered states by the mix of their festival calendar. K-Means selected 2 clusters, with a silhouette score of 0.50. Four north-eastern hill states, Manipur, Meghalaya, Mizoram and Nagaland, stand apart, with far more Christian and tribal holidays. A three group view also separates Delhi, Jammu and Kashmir, and Chhattisgarh. The rest of India is a continuum that does not follow regional blocks.
 
 ## Slide 9: Model 2: can a festival's date and footprint reveal its faith?
 
-Second, we asked whether a festival's timing and geography reveal its tradition. A Random Forest reached a macro F one score of 0.40. That is well above the baseline of 0.16, but far from perfect. The strongest signal is presence in the North East. The model confuses Diwali and Holi with the Eids and Christmas, because India's big festivals share the same nationwide footprint.
+Second, we asked whether a festival's timing and geography reveal its tradition. A Random Forest reached a macro F one score of 0.45. That is well above the baseline of 0.15, but far from perfect. The strongest signal is presence in the North East. The model confuses Diwali and Holi with the Eids and Christmas, because India's big festivals share the same nationwide footprint.
 
 ## Slide 10: Model 3: reported festive trade is growing fast
 
@@ -52,4 +52,4 @@ Our article is live on Medium, with every chart cited to its source. So far we h
 
 ## Slide 13: Four things the data shows
 
-To conclude. The official calendar peaks in spring and in October. It follows demography, yet it is more plural than the population. States group by calendar culture, not geography. And festive trade is growing quickly, but it is measured unevenly across traditions. All our code, data and sources are public. Thank you.
+To conclude. The official calendar peaks in spring and in October. It follows demography, yet it is more plural than the population. Four north-eastern states have a distinct calendar, and the rest of India is a continuum. And festive trade is growing quickly, but it is measured unevenly across traditions. All our code, data and sources are public. Thank you.

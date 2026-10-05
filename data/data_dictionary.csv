@@ -32,32 +32,41 @@ data/processed/festival_observations.csv,"rbi_regional_office, state, region",st
 data/processed/festival_observations.csv,festival,str,Canonical festival resolved from description by regex,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_observations.csv,tradition,str,Hindu | Muslim | Christian | Sikh | Buddhist | Jain | Parsi | Tribal/Indigenous | Cultural (multi-faith),Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
 data/processed/festival_observations.csv,festival_type,str,Religious | Harvest | New Year | Seasonal | Commemoration | Cultural,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_observations.csv,attribution,str,unique = festival was the only item in RBI label; shared_date = co-listed with other festivals/civic days,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,attribution,str,"unique = festival was the only item in the RBI label; shared_resolved = shared date but recognition >= 0.9; shared_split = shared date, evidence ambiguous",Derived (code/04_build_clean_dataset.py)
 data/processed/festival_observations.csv,n_items_on_date,int,Festivals + civic items co-listed on that date,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_observations.csv,attribution_weight,float,1 / n_items_on_date - fractional share of the closure attributed to this festival,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,equal_split_weight,float,"1 / n_items_on_date - the naive equal split, kept for comparison",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,attribution_weight,float,Share of the closure credited to this festival by the evidence score (sums to 1 per closed office-date),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,recognition_weight,float,"HEADLINE measure: 1.0 where the office is confirmed to observe the festival (even on a shared date), otherwise the attribution_weight",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,years_listable,int,Years of the study period in which the festival could be listed (study years minus presumed-Sunday years),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,sunday_affected_year,bool,True if this row belongs to a year in which the festival's main day fell on a Sunday; excluded from per-year averages,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_observations.csv,annual_weight,float,recognition_weight / years_listable (0 in Sunday-affected years): summing it gives recognised festival holidays per year,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"festival, tradition, festival_type",str,Identity & classification,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
-data/processed/festival_master.csv,years_observed,int,Years (of 2024-26) with at least one observation,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_master.csv,states_upper_per_year,float,Upper bound: states whose office closed on a date whose label names the festival,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_master.csv,states_confirmed_max / states_confirmed_any_year,int,States observing it on dates where it was the ONLY label,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_master.csv,reach_identifiable,bool,False when the festival never appears alone in RBI labels (reach cannot be separated),Derived (code/04_build_clean_dataset.py)
-data/processed/festival_master.csv,expected_states_per_year,float,"MAIN reach metric: sum over states of max attribution weight, averaged over years",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,years_observed,int,Study years with at least one observation,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,years_presumed_sunday,int,Years excluded from averages because the festival's main day fell on a Sunday (checked by calendar for fixed dates; inferred for moving dates),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,years_listable,int,Study years minus years_presumed_sunday,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,expected_states_per_year,float,"MAIN reach metric: sum over states of the highest recognition weight in a year, averaged over listable years",Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,states_confirmed_any_year,int,States with recognition >= 0.9 in at least one year,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,states_upper_any_year,int,Upper bound: states with any credited observation,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,attribution_certainty,float,Share of the festival's recognition coming from unique or confirmed observations,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,reach_identifiable,bool,True when attribution_certainty >= 0.5,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,national_reach_pct,float,Expected states / 29 x 100,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"n_regions, regions, states",int/str,Geographic footprint,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"modal_month, months_observed, modal_season_imd",int/str,Timing,Derived (code/04_build_clean_dataset.py)
-data/processed/festival_master.csv,date_drift_days,float,Range of first-observed day-of-year across 2024-26 (0-1 => fixed Gregorian date),Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,date_drift_days,float,Range of the first-observed calendar day across the study years (0-1 => fixed Gregorian date),Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,calendar_basis,str,Gregorian (fixed) | Lunar/Lunisolar (moving) | Undetermined (1 year),Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"mean_holiday_days, max_holiday_days",float/int,Duration: consecutive holiday days per office-year,Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"total_office_holiday_days, weighted_holiday_days, share_shared_date",int/float,Volume of observations,Derived (code/04_build_clean_dataset.py)
+data/processed/festival_master.csv,holiday_days_per_office_per_year,float,Recognised holiday-days per RBI office per year (Sunday-corrected),Derived (code/04_build_clean_dataset.py)
 data/processed/festival_master.csv,"wiki_* , attribution_url, attribution_publisher",str,Source grounding of the tradition label,Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url
 data/processed/festival_master.csv,"primary_source_url, primary_source_publisher",str,RBI,RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx
 data/processed/festival_master.csv,"latest_trade_inr_crore, latest_trade_year, trade_source_url",float/int/url,"Most recent trade/economy figure, if any",economic_footfall_raw.csv
 data/processed/state_profile.csv,"state, region, n_rbi_offices",str/int,"State/UT (Punjab, Haryana & Chandigarh combined = RBI Chandigarh office)",Derived (code/04_build_clean_dataset.py)
-data/processed/state_profile.csv,hol_days_<tradition>,float,Festival holiday-days per office per year attributed to each tradition (weighted),Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,hol_days_<tradition>,float,Recognised festival holiday-days per office per year for each tradition (sum of annual_weight),Derived (code/04_build_clean_dataset.py)
 data/processed/state_profile.csv,hol_days_total_festival,float,Total festival holiday-days per office per year,Derived (code/04_build_clean_dataset.py)
 data/processed/state_profile.csv,hol_share_<tradition>,float,% of the state's festival holidays per tradition,Derived (code/04_build_clean_dataset.py)
 data/processed/state_profile.csv,holiday_diversity_shannon,float,Shannon entropy of hol_share over traditions,Derived (code/04_build_clean_dataset.py)
-data/processed/state_profile.csv,n_distinct_festivals,int,Distinct festivals observed 2024-26,Derived (code/04_build_clean_dataset.py)
-data/processed/state_profile.csv,census_pct_<religion>,float,"Religion share of population, Census 2011 (Telangana uses undivided AP)","Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"
+data/processed/state_profile.csv,n_distinct_festivals,int,Distinct festivals with recognition > 0.5 in at least two years,Derived (code/04_build_clean_dataset.py)
+data/processed/state_profile.csv,census_pct_<religion>,float,"Religion share of population, Census 2011 (Telangana = 10 districts coded 532-541 of the AP table; Andhra Pradesh = the other 13)","Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"
 data/processed/state_profile.csv,pop_total,int,Census 2011 population,"Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"
-data/processed/state_profile.csv,population_diversity_shannon,float,Shannon entropy of census shares,code/05_eda_statistics.py
+data/processed/state_profile.csv,population_diversity_shannon,float,Shannon entropy of census shares,Derived (code/04_build_clean_dataset.py)
 data/processed/state_profile.csv,census_source_url,url,Census table URL,"Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361"

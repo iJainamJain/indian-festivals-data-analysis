@@ -74,6 +74,7 @@ Losoong / Namsoong | Losoong Festival | Bhutias, Lepchas |
 Drukpa Tshe-zi |  |  | 
 Saga Dawa | Vesak | Buddhist, Jains and Hindus | Buddhist
 Pang Lhabsol | Public holidays in India |  | 
+Sonam Lhosar | Sonam Lhosar | Tamang and Hyolmo communities | Tamang festival
 Parsi New Year (Navroz, Shahenshahi) | Nowruz | Iranian peoples and diaspora (originally) Various ethnic groups from Persianate societies (currently) Current countries: Afghanistan Albania Armenia Australia Azerbaijan Bahrain Bangladesh Canada Chin | Cultural
 Sarhul | Sarhul |  | 
 Karma Puja | Karam festival |  | Regional Festival/ Indian festival
@@ -97,4 +98,5 @@ Cheiraoba (Meitei New Year) | Sajibu Nongma Panba | Meitei people | Asian
 Yaosang | Yaosang | Meitei people | Religious, cultural, sports, spring festival
 Ningol Chakkouba | Ningol Chakkouba | Meiteis | Meitei people
 Imoinu Iratpa | Imoinu Iratpa | Meitei people | Religious
+Mera Chaoren Houba | Meitei festivals |  | 
 -> D:\DAV Lab\project\data\raw\festival_wikipedia_attribution.csv

@@ -4,6 +4,7 @@ Output: report/Project Status Report.pdf"""
 import os, json, base64, datetime
 import pandas as pd
 from playwright.sync_api import sync_playwright
+from project_config import YEARS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda *p: os.path.join(ROOT, *p)
@@ -15,6 +16,8 @@ fm = pd.read_csv(J("data", "processed", "festival_master.csv"))
 eco = pd.read_csv(J("data", "processed", "economic_footfall_clean.csv"))
 reg = pd.read_csv(J("outputs", "ml", "C_regression_metrics.csv")).set_index("metric")["value"]
 A, B, C = ml["A"], ml["B"]["metrics"], ml["C"]
+raw_n = len(pd.read_csv(J("data", "raw", "rbi_holiday_matrix_raw.csv")))
+HIN = pd.read_csv(J("outputs", "stats", "T2_by_tradition.csv")).set_index("tradition").loc["Hindu", "share_of_all_festival_holidays_pct"]
 REPO = "https://github.com/iJainamJain/indian-festivals-data-analysis"
 live = eng["live_url"] != "NOT YET PUBLISHED"
 today = datetime.date.today().strftime("%d %B %Y")
@@ -40,7 +43,7 @@ Team: Jainam Jain (23108B0084), Vrushan Patil, Dhanush Chowke, Aditya Tambe, Viv
 
 <h2>1. Status at a glance</h2>
 <table><tr><th style="width:21%">Task</th><th style="width:13%">Status</th><th>What exists</th></tr>
-<tr><td>1. Data collection &amp; preprocessing</td><td>{done}</td><td>{len(obs):,} festival-holiday records, {fm.festival.nunique()} festivals, 29 states/UTs, 2024&ndash;26; {len(eco)} verified spending and crowd figures; Census 2011 religion data; data dictionary</td></tr>
+<tr><td>1. Data collection &amp; preprocessing</td><td>{done}</td><td>{len(obs):,} festival-holiday records, {fm.festival.nunique()} festivals, 29 states/UTs, {YEARS[0]}&ndash;{YEARS[-1]}; {len(eco)} verified spending and crowd figures; Census 2011 religion data; data dictionary</td></tr>
 <tr><td>2. Machine learning</td><td>{done}</td><td>3 models (clustering, classification, regression) with code, saved model files and evaluation metrics</td></tr>
 <tr><td>3. Statistics &amp; EDA</td><td>{done}</td><td>{len(T)} hypothesis tests, 10 validation tables, 10 statistical charts, summary report</td></tr>
 <tr><td>4a. Blog article</td><td>{done if live else prog}</td><td>{"Published on Medium on " + pd.Timestamp(eng["published_on"]).strftime("%d %b %Y") if live else "Written, not yet published"}; 9 charts, 9 cited sources, 4 interactive charts</td></tr>
@@ -49,19 +52,20 @@ Team: Jainam Jain (23108B0084), Vrushan Patil, Dhanush Chowke, Aditya Tambe, Viv
 
 <h2>2. What was done in each task</h2>
 <b>Task 1: Data</b>
-<ul><li>Scraped the Reserve Bank of India's official bank-holiday lists for all 34 regional offices, every month of 2024, 2025 and 2026 (2,031 office-date rows, source URL on every row).</li>
+<ul><li>Scraped the Reserve Bank of India's official bank-holiday lists for all 34 regional offices, every month of {YEARS[0]} to {YEARS[-1]} ({raw_n:,} office-date rows, source URL on every row).</li>
 <li>Resolved RBI's holiday labels into {fm.festival.nunique()} named festivals across 9 tradition groups: Hindu, Muslim, Christian, Sikh, Buddhist, Jain, Parsi, tribal/indigenous and multi-faith cultural.</li>
 <li>Took each festival's tradition from its Wikipedia infobox, or a Government portal where no article exists.</li>
 <li>Added Census of India 2011 religion-by-state data and {len(eco)} spending and crowd figures, each opened and confirmed on its source page. No synthetic records.</li>
-<li>Known limit: RBI gives one combined label per date, so shared dates are split equally; {int((~fm.reach_identifiable).sum())} festivals are flagged as "reach not identifiable".</li></ul>
+<li>Accuracy corrections: Sunday correction (RBI lists no Sunday dates); shared dates credited by evidence from RBI, the Central Government compulsory-holiday list and each festival's home community; Telangana rebuilt from Census district tables.</li>
+<li>Known limit: {int((~fm.reach_identifiable).sum())} of {fm.festival.nunique()} festivals always share their date, so their state coverage stays uncertain and is flagged. Festivals with no bank holiday are not covered.</li></ul>
 <b>Task 2: Machine learning</b>
-<ul><li><b>State clustering (K-Means):</b> {A["best_k"]} groups, silhouette {A["silhouette"]:.2f}, bootstrap stability {A["bootstrap_ARI_mean"]:.2f}. Groups do not follow geography (agreement with regions {A["ARI_clusters_vs_geographic_region"]:.2f}).</li>
+<ul><li><b>State clustering (K-Means):</b> {A["best_k"]} groups, silhouette {A["silhouette"]:.2f}, bootstrap stability {A["bootstrap_ARI_mean"]:.2f}. Four north-eastern hill states stand apart from the rest; the mix does not follow geography (agreement with regions {A["ARI_clusters_vs_geographic_region"]:.2f}).</li>
 <li><b>Tradition classifier (Random Forest):</b> macro-F1 {B["Random Forest"]["macro_f1_mean"]:.2f} against {B["Majority baseline"]["macro_f1_mean"]:.2f} for a majority-class baseline, repeated 5-fold cross-validation.</li>
 <li><b>Festive-trade regression:</b> growth {reg["implied_annual_growth_%"]:.0f}% a year in this model (34% in the Task 3 test, which also uses the 2026 figures), leave-one-out error {reg["LOO_MAPE_%"]:.0f}%; predicted the 2026 Holi figure within {C["holdout_2026"][1]["abs_pct_error"]:.0f}% and Raksha Bandhan within {C["holdout_2026"][0]["abs_pct_error"]:.0f}%.</li></ul>
 <b>Task 3: Statistics</b>
 <ul><li>Festival holidays are concentrated by month (chi-square = {T.loc["H1", "statistic"]:.0f}, p &lt; 0.001); peaks in March, October and April.</li>
 <li>Each faith's share of a state's holidays rises with its population share (Spearman {min(T.loc[[i for i in T.index if i.startswith("H3")], "statistic"]):.2f} to {max(T.loc[[i for i in T.index if i.startswith("H3")], "statistic"]):.2f}, all significant).</li>
-<li>Hindu festivals are about 46% of festival holidays against 79.8% of the population, because several minority festivals are recognised almost nationwide.</li>
+<li>Hindu festivals are about {HIN:.0f}% of festival holidays against 79.8% of the population, because several minority festivals are recognised almost nationwide.</li>
 <li>No significant difference between the six regions (p = {T.loc["H6-hol_days", "p_value"]:.2f}); a festival's season is independent of its tradition (p = {T.loc["H2", "p_value"]:.2f}).</li></ul>
 <div class="figs"><div><img src="{img("F02_month_timeline_by_tradition.png")}"><div class="cap">Festival holidays by month and tradition</div></div>
 <div><img src="{img("F08_festive_trade_trend.png")}"><div class="cap">Festive trade estimates by year</div></div></div>

@@ -1,30 +1,30 @@
 state,region,cluster,cluster_name
-Andhra Pradesh,South,1,C2: above-avg Hindu holiday share
-Arunachal Pradesh,North-East,0,C1: above-avg Christian holiday share
-Assam,North-East,1,C2: above-avg Hindu holiday share
-Bihar,East,1,C2: above-avg Hindu holiday share
-Chhattisgarh,Central,2,C3: above-avg Muslim holiday share
-Delhi,North,2,C3: above-avg Muslim holiday share
-Goa,West,0,C1: above-avg Christian holiday share
-Gujarat,West,1,C2: above-avg Hindu holiday share
-Himachal Pradesh,North,1,C2: above-avg Hindu holiday share
-Jammu & Kashmir,North,2,C3: above-avg Muslim holiday share
-Jharkhand,East,1,C2: above-avg Hindu holiday share
-Karnataka,South,1,C2: above-avg Hindu holiday share
-Kerala,South,2,C3: above-avg Muslim holiday share
-Madhya Pradesh,Central,1,C2: above-avg Hindu holiday share
-Maharashtra,West,1,C2: above-avg Hindu holiday share
-Manipur,North-East,3,C4: above-avg Tribal Indigenous holiday share
-Meghalaya,North-East,3,C4: above-avg Tribal Indigenous holiday share
-Mizoram,North-East,0,C1: above-avg Christian holiday share
-Nagaland,North-East,0,C1: above-avg Christian holiday share
-Odisha,East,1,C2: above-avg Hindu holiday share
-Punjab-Haryana-Chandigarh,North,1,C2: above-avg Hindu holiday share
-Rajasthan,North,1,C2: above-avg Hindu holiday share
-Sikkim,North-East,1,C2: above-avg Hindu holiday share
-Tamil Nadu,South,1,C2: above-avg Hindu holiday share
-Telangana,South,1,C2: above-avg Hindu holiday share
-Tripura,North-East,3,C4: above-avg Tribal Indigenous holiday share
-Uttar Pradesh,North,1,C2: above-avg Hindu holiday share
-Uttarakhand,North,1,C2: above-avg Hindu holiday share
-West Bengal,East,1,C2: above-avg Hindu holiday share
+Andhra Pradesh,South,0,C1: typical mix
+Arunachal Pradesh,North-East,0,C1: typical mix
+Assam,North-East,0,C1: typical mix
+Bihar,East,0,C1: typical mix
+Chhattisgarh,Central,0,C1: typical mix
+Delhi,North,0,C1: typical mix
+Goa,West,0,C1: typical mix
+Gujarat,West,0,C1: typical mix
+Himachal Pradesh,North,0,C1: typical mix
+Jammu & Kashmir,North,0,C1: typical mix
+Jharkhand,East,0,C1: typical mix
+Karnataka,South,0,C1: typical mix
+Kerala,South,0,C1: typical mix
+Madhya Pradesh,Central,0,C1: typical mix
+Maharashtra,West,0,C1: typical mix
+Manipur,North-East,1,C2: more Tribal/Indigenous & Christian holidays than average
+Meghalaya,North-East,1,C2: more Tribal/Indigenous & Christian holidays than average
+Mizoram,North-East,1,C2: more Tribal/Indigenous & Christian holidays than average
+Nagaland,North-East,1,C2: more Tribal/Indigenous & Christian holidays than average
+Odisha,East,0,C1: typical mix
+Punjab-Haryana-Chandigarh,North,0,C1: typical mix
+Rajasthan,North,0,C1: typical mix
+Sikkim,North-East,0,C1: typical mix
+Tamil Nadu,South,0,C1: typical mix
+Telangana,South,0,C1: typical mix
+Tripura,North-East,0,C1: typical mix
+Uttar Pradesh,North,0,C1: typical mix
+Uttarakhand,North,0,C1: typical mix
+West Bengal,East,0,C1: typical mix

@@ -1,25 +1,25 @@
 {
  "A": {
-  "best_k": 4,
-  "silhouette": 0.4132,
-  "bootstrap_ARI_mean": 0.6101140437259867,
-  "bootstrap_ARI_sd": 0.27509847271507515,
-  "ARI_clusters_vs_geographic_region": 0.0272187080697719,
+  "best_k": 2,
+  "silhouette": 0.5018,
+  "bootstrap_ARI_mean": 0.6750104177198915,
+  "bootstrap_ARI_sd": 0.32707594987655797,
+  "ARI_clusters_vs_geographic_region": 0.007343985748304884,
   "clusters": {
-   "C1: above-avg Christian holiday share": [
-    "Arunachal Pradesh",
-    "Goa",
-    "Mizoram",
-    "Nagaland"
-   ],
-   "C2: above-avg Hindu holiday share": [
+   "C1: typical mix": [
     "Andhra Pradesh",
+    "Arunachal Pradesh",
     "Assam",
     "Bihar",
+    "Chhattisgarh",
+    "Delhi",
+    "Goa",
     "Gujarat",
     "Himachal Pradesh",
+    "Jammu & Kashmir",
     "Jharkhand",
     "Karnataka",
+    "Kerala",
     "Madhya Pradesh",
     "Maharashtra",
     "Odisha",
@@ -28,48 +28,84 @@
     "Sikkim",
     "Tamil Nadu",
     "Telangana",
+    "Tripura",
     "Uttar Pradesh",
     "Uttarakhand",
     "West Bengal"
    ],
-   "C3: above-avg Muslim holiday share": [
-    "Chhattisgarh",
-    "Delhi",
-    "Jammu & Kashmir",
-    "Kerala"
-   ],
-   "C4: above-avg Tribal Indigenous holiday share": [
+   "C2: more Tribal/Indigenous & Christian holidays than average": [
     "Manipur",
     "Meghalaya",
-    "Tripura"
+    "Mizoram",
+    "Nagaland"
+   ]
+  },
+  "detail_k": 3,
+  "detail_silhouette": 0.41475333634948636,
+  "detail_ARI_vs_geographic_region": 0.0106569627656118,
+  "detail_clusters": {
+   "C1: typical mix": [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Goa",
+    "Gujarat",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Odisha",
+    "Punjab-Haryana-Chandigarh",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal"
+   ],
+   "C2: more Tribal/Indigenous & Christian holidays than average": [
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland"
+   ],
+   "C3: more Muslim holidays than average": [
+    "Chhattisgarh",
+    "Delhi",
+    "Jammu & Kashmir"
    ]
   }
  },
  "B": {
   "best_model": "Random Forest",
   "cv": "5-fold x 20 repeats, stratified",
-  "n_festivals": 99,
+  "n_festivals": 101,
   "metrics": {
    "Majority baseline": {
-    "accuracy_mean": 0.4547,
-    "macro_precision_mean": 0.1137,
+    "accuracy_mean": 0.4457,
+    "macro_precision_mean": 0.1114,
     "macro_recall_mean": 0.25,
-    "macro_f1_mean": 0.1563,
-    "macro_f1_sd": 0.0022
+    "macro_f1_mean": 0.1541,
+    "macro_f1_sd": 0.0021
    },
    "Logistic Regression": {
-    "accuracy_mean": 0.4338,
-    "macro_precision_mean": 0.42,
-    "macro_recall_mean": 0.4242,
-    "macro_f1_mean": 0.4,
-    "macro_f1_sd": 0.1062
+    "accuracy_mean": 0.4795,
+    "macro_precision_mean": 0.4495,
+    "macro_recall_mean": 0.4547,
+    "macro_f1_mean": 0.4292,
+    "macro_f1_sd": 0.0971
    },
    "Random Forest": {
-    "accuracy_mean": 0.4641,
-    "macro_precision_mean": 0.4189,
-    "macro_recall_mean": 0.4245,
-    "macro_f1_mean": 0.4039,
-    "macro_f1_sd": 0.1049
+    "accuracy_mean": 0.5141,
+    "macro_precision_mean": 0.4696,
+    "macro_recall_mean": 0.4679,
+    "macro_f1_mean": 0.4464,
+    "macro_f1_sd": 0.1005
    }
   }
  },

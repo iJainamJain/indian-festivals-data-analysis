@@ -6,18 +6,25 @@ Zero synthetic records: every row traces to RBI, Census of India, Wikipedia/Govt
 
 | Source | Publisher | Use |
 |---|---|---|
-| RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx | Reserve Bank of India (Govt. of India) | Festival dates & state-wise observance, 2024-2026 |
+| RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx | Reserve Bank of India (Govt. of India) | Festival dates & state-wise observance, 2022-2026 (all offices x months) |
+| DoPT O.M. F.No.12/2/2023-JCA, 3 July 2025 (holidays in Central Government offices, 2026) | Dept. of Personnel & Training, Govt. of India | List of 14 compulsory holidays, used as second-source confirmation |
 | Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361 | Office of the Registrar General & Census Commissioner | State religious demography |
 | MediaWiki API (en.wikipedia.org) + utsav.gov.in, soreng.nic.in, dtahills.mn.gov.in, megtourism.gov.in | Wikipedia / Govt. | Tradition ('Observed by') attribution |
 | cait.in, The Tribune, AIR (newsonair.gov.in), Business Today, Outlook Business, Onmanorama, Nagaland Tribune, OdishaBytes, The News Minute, Millennium Post, The Federal, Angel One, Inshorts, IBEF | CAIT & verified news | Consumer spending, sector split, footfall |
 | nrf.com, english.www.gov.cn, stats.gov.sa, muenchen.de, Redseer via Storyboard18 | Industry / governments | Global analogues & e-commerce |
 | DataMeet India state boundaries (CC BY 2.5 IN) | DataMeet | Choropleth geometry only |
 
+## How under-counting is avoided
+
+* **Sunday correction.** The RBI matrix contains no Sunday dates (banks are closed anyway), so a festival that falls on a Sunday is absent for that year - e.g. Christmas 2022, Ram Navami 2025, Muharram 2025. Fixed-date festivals are checked against the calendar; for moving-date festivals a missing year, or a year in which the festival reached under half of its usual states, is presumed to be a Sunday year (at most 2 of 5). Each festival is averaged only over its listable years. Check: about 1 festival-year in 7 should be a Sunday (72 of 505); the method flags 63.
+* **Shared dates.** RBI prints one combined label per date for the whole country. An office-festival pair is *confirmed* when (a) the office closed on a date where the festival stood alone, (b) the festival is one of the 14 compulsory Central Government holidays (DoPT) and the office closed in every year it was listed, or (c) the office belongs to the festival's home community according to the Wikipedia 'Observed by' field (data/raw/home_region_prior.csv). A confirmed festival counts in full (recognition_weight = 1) even on a shared date. Unconfirmed co-listings are discounted by an evidence score, more heavily if the office stayed open on the festival's dates in some year. The audit trail is data/processed/attribution_propensity.csv.
+* **Telangana** did not exist in 2011; it and residual Andhra Pradesh are rebuilt from the district rows of the Census table.
+
 ## Known limitations
 
-* RBI labels list every holiday on a date nationwide, not per office. Where several festivals share a date the closure is split equally (attribution_weight); 39 of 99 festivals never appear alone, so their reach is flagged not identifiable.
-* **Sundays are not listed.** The RBI matrix contains no Sunday dates (banks are closed anyway), so a festival that falls on a Sunday is absent for that year - e.g. Ram Navami 2025, Muharram 2025, Mahavir Jayanti 2024, Maha Shivaratri 2026. About one festival-day in seven is missing in any single year; all per-year averages divide by three years and are therefore conservative (national total 15.5 festival-days per office per year; about 17.4 if each festival is averaged only over the years it appears).
-* **Scope of 'holiday'.** Only holidays notified under the Negotiable Instruments Act are covered. Holidays for government offices or schools only, restricted (optional) holidays and district-level local holidays are not. Holidays declared later in the year ARE included when RBI adds them (33 such dates in the data: elections, heavy rain, state mourning); the 2026 list reflects what was published on the scrape date.
+* **What the data cannot see.** Only holidays notified under the Negotiable Instruments Act are covered. Festivals with no bank holiday, holidays for government offices or schools only, restricted (optional) holidays and district-level local holidays are not. Union territories without an RBI regional office are not covered; Punjab, Haryana and Chandigarh share one office.
+* **Residual ambiguity.** Festivals that always share their date and have no confirming evidence remain uncertain; they are split by evidence score and flagged (reach_identifiable = False).
+* Holidays declared later in the year ARE included when RBI adds them (elections, heavy rain, state mourning); the 2026 list reflects what RBI had published on the retrieval date.
 * Bank holidays measure *official recognition*, not participation. Census 2011 is the latest published religion census.
 * Trade figures are industry-body estimates (mostly CAIT surveys), many are pre-event projections; comparable national figures are not published for most non-Hindu festivals - itself a finding on measurement bias.
 
@@ -73,27 +80,36 @@ Zero synthetic records: every row traces to RBI, Census of India, Wikipedia/Govt
 | `festival` | str | Canonical festival resolved from description by regex | Derived (code/04_build_clean_dataset.py) |
 | `tradition` | str | Hindu | Muslim | Christian | Sikh | Buddhist | Jain | Parsi | Tribal/Indigenous | Cultural (multi-faith) | Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url |
 | `festival_type` | str | Religious | Harvest | New Year | Seasonal | Commemoration | Cultural | Derived (code/04_build_clean_dataset.py) |
-| `attribution` | str | unique = festival was the only item in RBI label; shared_date = co-listed with other festivals/civic days | Derived (code/04_build_clean_dataset.py) |
+| `attribution` | str | unique = festival was the only item in the RBI label; shared_resolved = shared date but recognition >= 0.9; shared_split = shared date, evidence ambiguous | Derived (code/04_build_clean_dataset.py) |
 | `n_items_on_date` | int | Festivals + civic items co-listed on that date | Derived (code/04_build_clean_dataset.py) |
-| `attribution_weight` | float | 1 / n_items_on_date - fractional share of the closure attributed to this festival | Derived (code/04_build_clean_dataset.py) |
+| `equal_split_weight` | float | 1 / n_items_on_date - the naive equal split, kept for comparison | Derived (code/04_build_clean_dataset.py) |
+| `attribution_weight` | float | Share of the closure credited to this festival by the evidence score (sums to 1 per closed office-date) | Derived (code/04_build_clean_dataset.py) |
+| `recognition_weight` | float | HEADLINE measure: 1.0 where the office is confirmed to observe the festival (even on a shared date), otherwise the attribution_weight | Derived (code/04_build_clean_dataset.py) |
+| `years_listable` | int | Years of the study period in which the festival could be listed (study years minus presumed-Sunday years) | Derived (code/04_build_clean_dataset.py) |
+| `sunday_affected_year` | bool | True if this row belongs to a year in which the festival's main day fell on a Sunday; excluded from per-year averages | Derived (code/04_build_clean_dataset.py) |
+| `annual_weight` | float | recognition_weight / years_listable (0 in Sunday-affected years): summing it gives recognised festival holidays per year | Derived (code/04_build_clean_dataset.py) |
 
 ## `data/processed/festival_master.csv`
 
 | Column | Type | Description | Source |
 |---|---|---|---|
 | `festival, tradition, festival_type` | str | Identity & classification | Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url |
-| `years_observed` | int | Years (of 2024-26) with at least one observation | Derived (code/04_build_clean_dataset.py) |
-| `states_upper_per_year` | float | Upper bound: states whose office closed on a date whose label names the festival | Derived (code/04_build_clean_dataset.py) |
-| `states_confirmed_max / states_confirmed_any_year` | int | States observing it on dates where it was the ONLY label | Derived (code/04_build_clean_dataset.py) |
-| `reach_identifiable` | bool | False when the festival never appears alone in RBI labels (reach cannot be separated) | Derived (code/04_build_clean_dataset.py) |
-| `expected_states_per_year` | float | MAIN reach metric: sum over states of max attribution weight, averaged over years | Derived (code/04_build_clean_dataset.py) |
+| `years_observed` | int | Study years with at least one observation | Derived (code/04_build_clean_dataset.py) |
+| `years_presumed_sunday` | int | Years excluded from averages because the festival's main day fell on a Sunday (checked by calendar for fixed dates; inferred for moving dates) | Derived (code/04_build_clean_dataset.py) |
+| `years_listable` | int | Study years minus years_presumed_sunday | Derived (code/04_build_clean_dataset.py) |
+| `expected_states_per_year` | float | MAIN reach metric: sum over states of the highest recognition weight in a year, averaged over listable years | Derived (code/04_build_clean_dataset.py) |
+| `states_confirmed_any_year` | int | States with recognition >= 0.9 in at least one year | Derived (code/04_build_clean_dataset.py) |
+| `states_upper_any_year` | int | Upper bound: states with any credited observation | Derived (code/04_build_clean_dataset.py) |
+| `attribution_certainty` | float | Share of the festival's recognition coming from unique or confirmed observations | Derived (code/04_build_clean_dataset.py) |
+| `reach_identifiable` | bool | True when attribution_certainty >= 0.5 | Derived (code/04_build_clean_dataset.py) |
 | `national_reach_pct` | float | Expected states / 29 x 100 | Derived (code/04_build_clean_dataset.py) |
 | `n_regions, regions, states` | int/str | Geographic footprint | Derived (code/04_build_clean_dataset.py) |
 | `modal_month, months_observed, modal_season_imd` | int/str | Timing | Derived (code/04_build_clean_dataset.py) |
-| `date_drift_days` | float | Range of first-observed day-of-year across 2024-26 (0-1 => fixed Gregorian date) | Derived (code/04_build_clean_dataset.py) |
+| `date_drift_days` | float | Range of the first-observed calendar day across the study years (0-1 => fixed Gregorian date) | Derived (code/04_build_clean_dataset.py) |
 | `calendar_basis` | str | Gregorian (fixed) | Lunar/Lunisolar (moving) | Undetermined (1 year) | Derived (code/04_build_clean_dataset.py) |
 | `mean_holiday_days, max_holiday_days` | float/int | Duration: consecutive holiday days per office-year | Derived (code/04_build_clean_dataset.py) |
 | `total_office_holiday_days, weighted_holiday_days, share_shared_date` | int/float | Volume of observations | Derived (code/04_build_clean_dataset.py) |
+| `holiday_days_per_office_per_year` | float | Recognised holiday-days per RBI office per year (Sunday-corrected) | Derived (code/04_build_clean_dataset.py) |
 | `wiki_* , attribution_url, attribution_publisher` | str | Source grounding of the tradition label | Wikipedia infobox (MediaWiki API) or Govt. page in attribution_url |
 | `primary_source_url, primary_source_publisher` | str | RBI | RBI Holiday Matrix - https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx |
 | `latest_trade_inr_crore, latest_trade_year, trade_source_url` | float/int/url | Most recent trade/economy figure, if any | economic_footfall_raw.csv |
@@ -103,12 +119,12 @@ Zero synthetic records: every row traces to RBI, Census of India, Wikipedia/Govt
 | Column | Type | Description | Source |
 |---|---|---|---|
 | `state, region, n_rbi_offices` | str/int | State/UT (Punjab, Haryana & Chandigarh combined = RBI Chandigarh office) | Derived (code/04_build_clean_dataset.py) |
-| `hol_days_<tradition>` | float | Festival holiday-days per office per year attributed to each tradition (weighted) | Derived (code/04_build_clean_dataset.py) |
+| `hol_days_<tradition>` | float | Recognised festival holiday-days per office per year for each tradition (sum of annual_weight) | Derived (code/04_build_clean_dataset.py) |
 | `hol_days_total_festival` | float | Total festival holiday-days per office per year | Derived (code/04_build_clean_dataset.py) |
 | `hol_share_<tradition>` | float | % of the state's festival holidays per tradition | Derived (code/04_build_clean_dataset.py) |
 | `holiday_diversity_shannon` | float | Shannon entropy of hol_share over traditions | Derived (code/04_build_clean_dataset.py) |
-| `n_distinct_festivals` | int | Distinct festivals observed 2024-26 | Derived (code/04_build_clean_dataset.py) |
-| `census_pct_<religion>` | float | Religion share of population, Census 2011 (Telangana uses undivided AP) | Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361 |
+| `n_distinct_festivals` | int | Distinct festivals with recognition > 0.5 in at least two years | Derived (code/04_build_clean_dataset.py) |
+| `census_pct_<religion>` | float | Religion share of population, Census 2011 (Telangana = 10 districts coded 532-541 of the AP table; Andhra Pradesh = the other 13) | Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361 |
 | `pop_total` | int | Census 2011 population | Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361 |
-| `population_diversity_shannon` | float | Shannon entropy of census shares | code/05_eda_statistics.py |
+| `population_diversity_shannon` | float | Shannon entropy of census shares | Derived (code/04_build_clean_dataset.py) |
 | `census_source_url` | url | Census table URL | Census of India 2011, Table C-01 - https://censusindia.gov.in/nada/index.php/catalog/11361 |

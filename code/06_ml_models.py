@@ -28,6 +28,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.inspection import permutation_importance
 from scipy.cluster.hierarchy import linkage, dendrogram
 import viz_style as vs
+from project_config import PERIOD
 
 warnings.filterwarnings("ignore")
 vs.apply()
@@ -44,7 +45,7 @@ log = {}
 
 # =============================== MODEL A: STATE CLUSTERING =====================================
 # Feature engineering: tradition shares (%) + monthly share of festival holidays (%) + calendar size & diversity
-month = obs.groupby(["state", "month"])["attribution_weight"].sum().unstack(fill_value=0).reindex(columns=range(1, 13), fill_value=0)
+month = obs.groupby(["state", "month"])["annual_weight"].sum().unstack(fill_value=0).reindex(columns=range(1, 13), fill_value=0)
 month = 100 * month.div(month.sum(axis=1), axis=0); month.columns = [f"month_share_{m:02d}" for m in month.columns]
 # Feature selection (documented experiment in outputs/ml/A_feature_set_experiment.csv): the four major tradition
 # shares give far better-separated clusters than adding the 12 monthly shares (curse of dimensionality at n=29).
@@ -83,10 +84,21 @@ region_ari = adjusted_rand_score(sp["region"], labels)
 prof = XA.assign(cluster=labels).groupby("cluster").mean()
 # name clusters by their dominant distinguishing trait (largest z-score deviation among tradition shares)
 z = (prof[share_cols] - XA[share_cols].mean()) / XA[share_cols].std()
-names = {}
-for c in prof.index:
-    top = z.loc[c].idxmax().replace("hol_share_", "").replace("_", " ").title()
-    names[c] = f"C{c + 1}: above-avg {top} holiday share" if z.loc[c].max() > 0.5 else f"C{c + 1}: average mix"
+TRAIT = {"hol_share_hindu": "Hindu", "hol_share_muslim": "Muslim", "hol_share_christian": "Christian", "hol_share_tribal_indigenous": "Tribal/Indigenous"}
+def name_clusters(lab):
+    """Name each cluster by the tradition shares that sit clearly above the all-state average (z > 0.6)."""
+    pr = XA.assign(cluster=lab).groupby("cluster").mean()
+    zz = (pr[share_cols] - XA[share_cols].mean()) / XA[share_cols].std()
+    out = {}
+    for c in pr.index:
+        tr = [TRAIT[k] for k, v in zz.loc[c].sort_values(ascending=False).items() if v > 0.6]
+        out[c] = f"C{c + 1}: more {' & '.join(tr)} holidays than average" if tr else f"C{c + 1}: typical mix"
+    return out
+names = name_clusters(labels)
+# A finer view for description: if the best split is only two groups, also report the 3-group solution with its (lower) score
+k_detail = max(best_k, 3)
+km_d = KMeans(k_detail, n_init=100, random_state=SEED).fit(XA_s); labels_d = km_d.labels_; names_d = name_clusters(labels_d)
+sil_d = float(silhouette_score(XA_s, labels_d))
 sp_out = sp[["region"]].assign(cluster=labels, cluster_name=[names[l] for l in labels])
 sp_out.to_csv(os.path.join(ML, "A_state_clusters.csv"))
 prof.assign(n_states=pd.Series(labels).value_counts().sort_index(), name=[names[c] for c in prof.index]).round(2).T.to_csv(
@@ -95,7 +107,10 @@ joblib.dump({"scaler_features": list(XA.columns), "kmeans": km}, os.path.join(MO
 log["A"] = {"best_k": best_k, "silhouette": float(sel.loc[sel.k == best_k, "kmeans_silhouette"].iloc[0]),
             "bootstrap_ARI_mean": float(np.mean(aris)), "bootstrap_ARI_sd": float(np.std(aris)),
             "ARI_clusters_vs_geographic_region": float(region_ari),
-            "clusters": {names[c]: sorted(sp_out.index[labels == c].tolist()) for c in sorted(set(labels))}}
+            "clusters": {names[c]: sorted(sp_out.index[labels == c].tolist()) for c in sorted(set(labels))},
+            "detail_k": k_detail, "detail_silhouette": sil_d,
+            "detail_ARI_vs_geographic_region": float(adjusted_rand_score(sp["region"], labels_d)),
+            "detail_clusters": {names_d[c]: sorted(XA.index[labels_d == c].tolist()) for c in sorted(set(labels_d))}}
 
 # figures: PCA map + dendrogram + silhouette curve
 pca = PCA(2, random_state=SEED).fit(XA_s); Z2 = pca.transform(XA_s)
@@ -111,13 +126,13 @@ ax[0].legend(fontsize=8, loc="best")
 ax[1].plot(sel.k, sel.kmeans_silhouette, marker="o", color=vs.SLOTS[0], label="K-Means")
 ax[1].plot(sel.k, sel.ward_silhouette, marker="s", color=vs.SLOTS[1], label="Agglomerative (Ward)")
 ax[1].axvline(best_k, color=vs.INK2, lw=1, ls=":"); ax[1].set(xlabel="k", ylabel="Silhouette score", title="Model selection"); ax[1].legend(fontsize=8)
-fig.tight_layout(); vs.source_note(fig, "RBI holiday matrix 2024-26; features = Hindu, Muslim, Christian, Tribal shares of festival holidays (standardised)")
+fig.tight_layout(); vs.source_note(fig, f"RBI holiday matrix {PERIOD}; features = Hindu, Muslim, Christian, Tribal shares of festival holidays (standardised)")
 fig.savefig(os.path.join(FIG, "M01_state_clusters.png")); plt.close(fig)
 fig, ax = plt.subplots(figsize=(11, 4.5))
 dendrogram(linkage(XA_s, "ward"), labels=[s.replace("Punjab-Haryana-Chandigarh", "Pb-Hr-Ch") for s in XA.index], leaf_rotation=90,
            leaf_font_size=8, ax=ax, color_threshold=None, above_threshold_color=vs.INK2)
 ax.set_title("Hierarchical clustering of state festival calendars (Ward linkage)"); ax.grid(False); ax.set_ylabel("Ward distance")
-vs.source_note(fig, "RBI holiday matrix 2024-26"); fig.savefig(os.path.join(FIG, "M02_state_dendrogram.png")); plt.close(fig)
+vs.source_note(fig, f"RBI holiday matrix {PERIOD}"); fig.savefig(os.path.join(FIG, "M02_state_dendrogram.png")); plt.close(fig)
 
 # blog-friendly view of the same clusters: a map of India coloured by cluster
 from matplotlib.patches import Polygon as _Poly, Patch
@@ -125,9 +140,9 @@ from matplotlib.collections import PatchCollection
 _gj = json.load(open(os.path.join(ROOT, "data", "raw", "geo", "india_states_datameet.geojson"), encoding="utf-8"))
 _G2S = {"Arunanchal Pradesh": "Arunachal Pradesh", "NCT of Delhi": "Delhi", "Punjab": "Punjab-Haryana-Chandigarh",
         "Haryana": "Punjab-Haryana-Chandigarh", "Chandigarh": "Punjab-Haryana-Chandigarh"}
-_lab = dict(zip(XA.index, labels))
+_lab = dict(zip(XA.index, labels_d))
 # colour follows the tradition that defines the cluster (same colours as every other chart)
-_ccol = {c: vs.TRAD_COLOR.get(next((t for t in vs.TRAD_ORDER if t.split("/")[0] in names[c]), ""), vs.INK2) for c in names}
+_ccol = {c: vs.TRAD_COLOR.get(next((t for t in vs.TRAD_ORDER if t in names_d[c].split(" & ")[0]), "Hindu"), vs.TRAD_COLOR["Hindu"]) for c in names_d}
 fig, ax = plt.subplots(figsize=(9.5, 10.2))
 for f in _gj["features"]:
     st = _G2S.get(f["properties"]["ST_NM"], f["properties"]["ST_NM"]); g_ = f["geometry"]
@@ -135,19 +150,22 @@ for f in _gj["features"]:
     fc = _ccol[_lab[st]] if st in _lab else "#e4e3df"
     ax.add_collection(PatchCollection([_Poly(np.array(p_[0])[:, :2], closed=True) for p_ in polys], facecolor=fc, edgecolor="white", linewidth=0.6))
 ax.set_xlim(67.5, 98); ax.set_ylim(7.5, 37.5); ax.set_aspect("equal"); ax.axis("off")
-_nice = {c: names[c].split(": ")[1].replace("above-avg ", "More ").replace(" holiday share", " holidays than average").replace("Tribal Indigenous", "Tribal/indigenous")
-         for c in names}
-_cnt = pd.Series(labels).value_counts()
-ax.legend(handles=[Patch(facecolor=_ccol[c], label=f"{_nice[c]} ({_cnt[c]} states)") for c in sorted(names, key=lambda c: -_cnt[c])] +
+_nice = {c: names_d[c].split(": ")[1].replace("more ", "More ").replace("typical mix", "Typical mix (close to the all-India average)") for c in names_d}
+_cnt = pd.Series(labels_d).value_counts()
+ax.legend(handles=[Patch(facecolor=_ccol[c], label=f"{_nice[c]} ({_cnt[c]} states)") for c in sorted(names_d, key=lambda c: -_cnt[c])] +
           [Patch(facecolor="#e4e3df", label="No RBI office (no data)")], loc="upper left", bbox_to_anchor=(0.0, -0.01), fontsize=11, frameon=False)
-ax.set_title("Four kinds of festival calendar in India", fontsize=16, pad=24)
-ax.text(0, 1.015, "States grouped by the share of Hindu, Muslim, Christian and tribal festivals in their bank holidays (K-Means clustering)", transform=ax.transAxes, fontsize=10, color=vs.INK2)
-ax.text(0.0, -0.22, "Source: RBI holiday matrix 2024-26; boundaries DataMeet (CC BY 2.5 IN); island UTs not shown", transform=ax.transAxes, fontsize=7.5, color=vs.INK2, va="top")
+_num = {2: "Two", 3: "Three", 4: "Four", 5: "Five"}.get(k_detail, str(k_detail))
+ax.set_title(f"{_num} kinds of festival calendar in India", fontsize=16, pad=24)
+_sub = (f"K-Means on each state's Hindu, Muslim, Christian and tribal holiday shares. Strongest split: {best_k} groups (silhouette "
+        f"{log['A']['silhouette']:.2f}); this {k_detail}-group view scores {sil_d:.2f}" if k_detail != best_k else
+        f"K-Means on each state's Hindu, Muslim, Christian and tribal holiday shares (silhouette {sil_d:.2f})")
+ax.text(0, 1.015, _sub, transform=ax.transAxes, fontsize=9.5, color=vs.INK2)
+ax.text(0.0, -0.22, f"Source: RBI holiday matrix {PERIOD}; boundaries DataMeet (CC BY 2.5 IN); island UTs not shown", transform=ax.transAxes, fontsize=7.5, color=vs.INK2, va="top")
 fig.savefig(os.path.join(FIG, "M05_cluster_map.png")); plt.close(fig)
 
 # =============================== MODEL B: TRADITION CLASSIFIER =================================
 REG = ["North", "East", "Central", "West", "South", "North-East"]
-reg_share = obs.groupby(["festival", "region"])["attribution_weight"].sum().unstack(fill_value=0).reindex(columns=REG, fill_value=0)
+reg_share = obs.groupby(["festival", "region"])["annual_weight"].sum().unstack(fill_value=0).reindex(columns=REG, fill_value=0)
 reg_share = reg_share.div(reg_share.sum(axis=1), axis=0); reg_share.columns = [f"region_share_{r}" for r in REG]
 B = fm.set_index("festival").join(reg_share)
 B["month_sin"] = np.sin(2 * np.pi * B.modal_month / 12); B["month_cos"] = np.cos(2 * np.pi * B.modal_month / 12)
@@ -201,7 +219,7 @@ ax[0].set(xlabel="Predicted", ylabel="True", title=f"{best}: out-of-fold confusi
 top = imp.tail(10)
 ax[1].barh([t.replace("region_share_", "share in ").replace("_", " ") for t in top.index], top.values, color=vs.SLOTS[0], height=0.62)
 ax[1].set(xlabel="Mean drop in macro-F1 when shuffled", title="Permutation feature importance"); ax[1].grid(axis="y", visible=False)
-fig.tight_layout(); vs.source_note(fig, "Festival features derived from RBI holiday matrix 2024-26; labels from Wikipedia / Govt. attribution (festival_master.csv)")
+fig.tight_layout(); vs.source_note(fig, f"Festival features derived from RBI holiday matrix {PERIOD}; labels from Wikipedia / Govt. attribution (festival_master.csv)")
 fig.savefig(os.path.join(FIG, "M03_classifier_results.png")); plt.close(fig)
 
 # =============================== MODEL C: FESTIVE-TRADE REGRESSION =============================

@@ -181,7 +181,7 @@ function __doPostBack(eventTarget, eventArgument) {
                 var param = { keyWord: document.getElementById('txtSearch').value };
 
                 $.ajax({
-                    url: "../Home.aspx/GetKeywords",
+                    url: "/Home.aspx/GetKeywords",
                     data: JSON.stringify(param),
                     dataType: "json",
                     type: "POST",
@@ -351,28 +351,34 @@ left: -9999px;
 
             <li class="fonts">
                 <a id="UsrFontCntr_LinkBtnFontIncrease" role="button" title="Increase Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontIncrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-increase.gif" alt="Increase Font Size" />
-                    <span id="UsrFontCntr_spanFontIncrease" class="sr-only">Not Pressed</span></a>
+                    
+                </a>
             </li>
             <li class="fonts">
                 <a id="UsrFontCntr_LinkBtnFontRegular" role="button" title="Regular Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontRegular&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-reset.gif" alt="Regular Font Size" />
-                    <span id="UsrFontCntr_spanFontRegular" class="sr-only">Pressed</span></a>
+                    
+                </a>
             </li>
             <li class="fonts">
                 <a id="UsrFontCntr_LinkBtnFontDecrease" role="button" title="Decrease Font Size" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnFontDecrease&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/font-decrease.gif" alt="Decrease Font Size" />
-                    <span id="UsrFontCntr_spanFontDecrease" class="sr-only">Not Pressed</span></a>
+                    
+                </a>
             </li></ul>
 		<ul style="margin:0px;padding:0px;">
             <li class="black">
                 <a id="UsrFontCntr_LinkBtnAccessibilty" role="button" title="Apply Dark Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/dark-theme.gif" alt="Apply Dark Theme" />
-                    <span id="UsrFontCntr_spanAccessibilty" class="sr-only">Not Pressed</span></a>
+                    
+                </a>
             </li>
             <li class="white">
                 <a id="UsrFontCntr_LinkBtnUndoAccessibilty" role="button" title="Apply Normal Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnUndoAccessibilty&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/bright-theme.gif" alt="Apply Normal Theme" />
-                     <span id="UsrFontCntr_spanUndoAccessibilty" class="sr-only">Pressed</span></a>
+                     
+                </a>
             </li>
             <li class="white">
             <a id="UsrFontCntr_LinkBtnGreyScale" role="button" title="Apply Grey Theme" href="javascript:__doPostBack(&#39;UsrFontCntr$LinkBtnGreyScale&#39;,&#39;&#39;)" style="text-decoration:none;"><img src="/images/graytheme.gif" alt="Apply Grey Theme" />
-                                <span id="UsrFontCntr_spanGreyScale" class="sr-only">Not Pressed</span></a></li>
+                                
+                                </a></li>
 
             </ul>
 		<div>
@@ -383,7 +389,7 @@ left: -9999px;
                 <label style="margin-right: 6px;">
                     Change Language</label>
 			
-			<a href="#" onclick="SetLink();" class="link1" title="Website in Hindi">हिंदी</a>
+			<a href="#" onclick="SetLink();" class="link1" title="Change language to Hindi">हिंदी</a>
 			</div>
                    
         </div>
@@ -395,8 +401,8 @@ left: -9999px;
 <div class="container_12">
     <div class="grid_4" role="banner">
         <div class="logo">
-            <a href="/home.aspx" title="Official website of Reserve Bank of India">
-                <img src="/images/rbi-company-logo.jpg" alt="Logo of Official website of Reserve Bank of India" title="Official website of Reserve Bank of India" /></a></div>
+            <a href="/home.aspx" >
+                <img src="/images/rbi-company-logo.jpg" alt="Logo of Official website of Reserve Bank of India" /></a></div>
     </div>
     <div class="grid_5" align="right" role="search" style="float: right">
         <label for="searchbox" class="search_label">
@@ -441,8 +447,9 @@ left: -9999px;
 			<li><a href="/scripts/AboutUsDisplay.aspx?pg=ExecutiveDirectors.htm">Executive Directors</a></li>
         </ul>		
 	 </li>
-	 <li><a href="AboutUsDisplay.aspx?pg=MediaKit.htm">Media Kit</a></li>
+<li><a href="AboutUsDisplay.aspx?pg=MediaKit.htm">Media Kit</a></li>
 	 <li><a href="CommunicationPolicy.aspx">Communication Policy of RBI</a></li>
+	
      <li>
         <a href="#" aria-expanded="false" role="button" aria-controls="Ab-soi">Sources of Information <span aria-hidden="true">▶</span></a>
         <ul class="submenu1" id="Ab-soi">
@@ -469,7 +476,7 @@ left: -9999px;
 </ul>
 </li>
   <li>
-    <a href="#" aria-expanded="false" role="button" aria-controls="No-Sub1">Notification ▼</a>
+    <a href="#" aria-expanded="false" role="button" aria-controls="No-Sub1">Notifications ▼</a>
     <ul class="submenu1" id="No-Sub1">
       <li><a href="/scripts/NotificationUser.aspx">Notifications </a></li>
              <li><a href="/scripts/BS_ViewMasterDirections.aspx">Master Directions </a></li>
@@ -1014,7 +1021,7 @@ function setLetterSpace(val) {
   <div class="container_12">    
       <div class="grid_9" style="width: 833px !important; ">
           
-          <h2><span class="blue">More</span> Links </h2>
+          <h2><span class="blue">More</span> Links :</h2>
           
 		<ul class="footerlist" style="column-count:4">
                   <li ><a href="/Scripts/HolidayMatrixDisplay.aspx">Bank Holidays</a></li>
@@ -1033,7 +1040,7 @@ function setLetterSpace(val) {
                   <li><a target="_blank" href="https://opportunities.rbi.org.in/scripts/index.aspx">Opportunities<span>@</span>RBI</a></li>
                   <li><a href="/Scripts/rbi_clarification.aspx">RBI Clarifications</a></li>
  		<li><a target="_blank" href="https://rbikehtahai.rbi.org.in/">RBI Kehta Hai</a></li>
-                  <li><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Utkarsh202910042026.pdf" target="_blank">RBI’s Vision and Values <img src="../Images/pdf.gif" alt="PDF document" style="padding-bottom: 4px; width:12px; border:0;vertical-align: middle;"> (652 kb)</a></li>
+                  <li><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Utkarsh202910042026.pdf" target="_blank">RBI’s Vision and Values <img src="../Images/pdf.gif" alt="PDF document" style="padding-bottom: 4px; width:12px; border:0; vertical-align:middle;"> (652 KB)</a></li>
                   <li><a href="/Scripts/Righttoinfoact.aspx">Right to Information Act</a></li>
                   <li><a href="/Scripts/BS_ViewTenders.aspx">Tenders</a></li>
                   
@@ -1061,7 +1068,7 @@ function setLetterSpace(val) {
 
           <li>
               <a href="https://instagram.com/reservebankofindia" class="videos" target="_blank">
-                  <img src="/images/Instagram.jpg"  alt="Instagram Icon" class="videos" style="padding-left: 5%; width:14px;">Instagram
+                  <img src="/images/Instagram.jpg" alt="Instagram Icon" class="videos" style="padding-left: 5%; width:14px;">Instagram
               </a>
           </li>
           <li style="float: left;"><a href="https://www.facebook.com/RBIsays" class="videos" target="_blank"><img src="/images/Facebook.jpg" style="width:14px;" alt="Facebook Icon" class="videos">Facebook</a></li>
@@ -1071,7 +1078,7 @@ function setLetterSpace(val) {
               </a>
           </li>
       </ul>
-	<a href="https://www.india.gov.in" class="videos" target="_blank" >
+	<a href="https://www.india.gov.in" class="videos" target="_blank">
                   <img src="/images/indiaGov.png" alt="National Portal of India logo" class="">
               </a>
     </div>
@@ -1084,11 +1091,11 @@ function setLetterSpace(val) {
         <div class="clearfix"></div>
 
         <div class="grid_6 pull_left">Website owned and managed by Reserve Bank of India. Contact us on helpdoc[at]rbi[dot]org[dot]in</div>
-        <div class="grid_5 pull_right">Website last updated date: Sep 28, 2026</div>
+        <div class="grid_5 pull_right">Website last updated date: Oct 05, 2026</div>
         <div class="clearfix"></div>
 	<div class="grid_6 pull_left"><a href="https://www.rbi.org.in/scripts/wim.aspx">Web Information Manager</a></div>
 	<div class="grid_5 pull_right"><a href="https://rbidocs.rbi.org.in/rdocs/content/pdfs/Accessibility20012026.pdf" target="_blank">Accessibility Statement
-	<img alt="PDF - Accessibility Statement" style="padding: 1px; width:16px; border:0; vertical-align: middle;" src="../Images/pdf.gif" > (133 KB)
+	<img alt="PDF - Accessibility Statement" style="padding: 1px; width:16px; border:0; vertical-align:middle;" src="../Images/pdf.gif" > (133 KB)
 	</a><span aria-hidden="true"> |</span><a href="/scripts/ScreenReader.aspx" title="Information related to screen reader">Screen Reader and Accessibility Help</a></div>
 	<div class="clearfix"></div>
         <div class="grid_12 pull_left">Supports: Google Chrome 147+ | Firefox 150+ | Microsoft Edge Version 147+ | Safari 17+</div>
@@ -1474,6 +1481,41 @@ function linkMessage(){
 	const link = event.target.closest('a[target="_blank"]');
 	if(link){ 
 		event.preventDefault();
+		const docRegx = /\.(pdf|docx?|xlsx?|zip?|xls|doc)$/i;
+		if(docRegx.test(link)){
+			if(/\.pdf$/i.test(link))
+			{	
+				if(confirm("This PDF will open in a new browser tab. Do you want to continue?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.docx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.doc$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xlsx$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.xls$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this document?")){
+				window.open(link.href,"_blank");}
+			}
+			else if(/\.zip$/i.test(link))
+			{	
+				if(confirm("Are you sure you want to download this file?")){
+				window.open(link.href,"_blank");}
+			}
+		}
+
+		else 
 		if(confirm("This link will open in a new browser tab. Do you want to continue?")){
 			window.open(link.href,"_blank");
 		}
@@ -1492,7 +1534,7 @@ function linkMessage(){
 }
 
 </script>
-<script>
+<script >
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1513,9 +1555,21 @@ document.querySelectorAll('table.tablebg').forEach(table => {
     });
 
     if (!hasInPageAnchorsInThisTableOnly) {
+       // table.setAttribute('role', 'presentation');
+       //} else {
+       //    table.removeAttribute('role'); 
+	if(table.closest('td')){
+	if(table.querySelector('th'))
+	{	
+		table.removeAttribute('role');
+	}
+	else{
         table.setAttribute('role', 'presentation');
-    } else {
-        table.removeAttribute('role'); 
+		}
+	}
+	else{
+        table.setAttribute('role', 'presentation');
+		}
     }
 });
 $('.brd-ptable1').attr('role','presentation');
@@ -1584,8 +1638,9 @@ const breadcrumbList = document.querySelector('.breadcrumbs');
     
         if (listItems.length > 0) {
             
-            const lastItem = $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).last().attr('aria-current', 'page');
+            const lastItem = $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).last().attr('aria-current', 'page').css('background','none'); //remove extra icons from empty breadcrumbs
             $('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" && $(this).children().length===0;}).attr('role','presentation');
+	    
        		$('.breadcrumbs li').filter(function(){
 			if($(this).children().length!==0)
 			{
@@ -1600,7 +1655,7 @@ const breadcrumbList = document.querySelector('.breadcrumbs');
 		if($('.breadcrumbs li').last().find('a').length>0)
 		{			
 			const $a = $('.breadcrumbs li').last().find('a');
-			$('<span>',{class: $a.attr('class'), text: $a.text()}).replaceAll($a).attr('aria-current', 'page');
+			$('<span>',{class: $a.attr('class'), text: $a.text()}).replaceAll($a).attr('aria-current', 'page').css('background','none');;
 		}
 		
 		if($('.breadcrumbs li').last().find('span').length>0)
@@ -1611,10 +1666,11 @@ const breadcrumbList = document.querySelector('.breadcrumbs');
 				$('.breadcrumbs li').last().find('span').removeAttr('aria-current');				
 			}
 			else{
-				$('.breadcrumbs li').last().find('span').filter(function(){ return $(this).attr('role')!=='presentation';}).last().attr('aria-current', 'page');					
+				$('.breadcrumbs li').last().find('span').filter(function(){ return $(this).attr('role')!=='presentation';}).last().attr('aria-current', 'page').css('background','none');;					
 			}		
 		}
-		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).removeAttr('role','presentation');
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())!=="";}).removeAttr('role','presentation'); 
+		$('.breadcrumbs li').filter(function(){ return $.trim($(this).text())==="" }).css('background','none');//remove extra icons from empty breadcrumbs
         }
     }
 });
@@ -1670,7 +1726,7 @@ setLetterSpace(false);//]]>
 
 
 </script>
-<script id="f5_cspm">(function(){var f5_cspm={f5_p:'NAAANNOLPEDKKNBCAMNPJPKJNCJFKIKNEANEOKHEKNBDBJMFDHKEDHCHGJHLMIKCCJEBHGMAAAAOHDELJIMACNFLAAABOBFOEKNIFGCNKMONBOCKIEGBHDHJMALPHNPJ',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0863824298aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
+<script id="f5_cspm">(function(){var f5_cspm={f5_p:'CDNILCMBPINNDBCGPDDLMEKCEDINDOJDCOBMGCKIJMHLBBKOPCLJCOKOKMGCHEBEOPGBAACAAAGPJHDPHFEACPLEAAJFOPKFAFGPAOOBNJJPCBMBKDGAFFIGNHKNEMAI',setCharAt:function(str,index,chr){if(index>str.length-1)return str;return str.substr(0,index)+chr+str.substr(index+1);},get_byte:function(str,i){var s=(i/16)|0;i=(i&15);s=s*32;return((str.charCodeAt(i+16+s)-65)<<4)|(str.charCodeAt(i+s)-65);},set_byte:function(str,i,b){var s=(i/16)|0;i=(i&15);s=s*32;str=f5_cspm.setCharAt(str,(i+16+s),String.fromCharCode((b>>4)+65));str=f5_cspm.setCharAt(str,(i+s),String.fromCharCode((b&15)+65));return str;},set_latency:function(str,latency){latency=latency&0xffff;str=f5_cspm.set_byte(str,40,(latency>>8));str=f5_cspm.set_byte(str,41,(latency&0xff));str=f5_cspm.set_byte(str,35,2);return str;},wait_perf_data:function(){try{var wp=window.performance.timing;if(wp.loadEventEnd>0){var res=wp.loadEventEnd-wp.navigationStart;if(res<60001){var cookie_val=f5_cspm.set_latency(f5_cspm.f5_p,res);window.document.cookie='f5avr0863824298aaaaaaaaaaaaaaaa_cspm_='+encodeURIComponent(cookie_val)+';path=/;'+'';}
 return;}}
 catch(err){return;}
 setTimeout(f5_cspm.wait_perf_data,100);return;},go:function(){var chunk=window.document.cookie.split(/\s*;\s*/);for(var i=0;i<chunk.length;++i){var pair=chunk[i].split(/\s*=\s*/);if(pair[0]=='f5_cspm'&&pair[1]=='1234')

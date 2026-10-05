@@ -35,6 +35,12 @@ cr = pd.read_csv(J("outputs", "stats", "T5_holiday_vs_population_share.csv")).se
 imp = pd.read_csv(J("outputs", "ml", "B_permutation_importance.csv"), index_col=0).iloc[:, 0].sort_values(ascending=False)
 A_, B_, C_ = ml["A"], ml["B"]["metrics"], ml["C"]
 growth = T.loc["H9", "interpretation"].split("growth ")[1].split("%")[0].split(".")[0]
+from project_config import YEARS, N_YEARS
+bytrad = pd.read_csv(J("outputs", "stats", "T2_by_tradition.csv")).set_index("tradition")
+HIN = bytrad.loc["Hindu", "share_of_all_festival_holidays_pct"]
+RHO_LO, RHO_HI = cr.spearman_rho.min(), cr.spearman_rho.max()
+N_UNSURE = int((~fm.reach_identifiable).sum())
+N_WORDS = {3: "three", 4: "four", 5: "five", 6: "six"}[N_YEARS]
 TEAM = ["Jainam Jain", "Vrushan Patil", "Dhanush Chowke", "Aditya Tambe", "Vivek Jaiswal"]
 # data-accuracy facts, computed from the raw scrape
 _dts = pd.to_datetime(raw.drop_duplicates("date").date)
@@ -124,27 +130,28 @@ SL = [
           "Our goal was an evidence-only picture: when and where festivals are officially recognised, whose festivals they are, and what they are worth economically. "
           "We followed one strict rule. Zero synthetic data. Every record carries the link it came from."),
  dict(html=page(3, "02 &middot; Dataset", "An official, source-linked festival dataset",
-                tiles([(f"{len(obs):,}", "festival-holiday records, 2024 to 2026"), (f"{fm.festival.nunique()}", "festivals across 9 tradition groups"),
+                tiles([(f"{len(obs):,}", f"festival-holiday records, {YEARS[0]} to {YEARS[-1]}"), (f"{fm.festival.nunique()}", "festivals across 9 tradition groups"),
                        ("29", "states and UTs, from 34 RBI offices"), (f"{len(eco)}", "spending and crowd figures, each checked on its source page")]) +
                 '<ul class="big" style="font-size:29px;margin-top:44px"><li><b>Reserve Bank of India</b> holiday lists: festival dates and which states observe them.</li>'
                 '<li><b>Census of India 2011</b>: religion by state. &nbsp;<b>Wikipedia and Government portals</b>: each festival\'s tradition.</li>'
                 '<li><b>CAIT, state governments, All India Radio, verified news</b>: spending and crowd sizes.</li></ul>'),
-      say=f"The backbone is the Reserve Bank of India's official holiday list. We collected every bank holiday for all thirty-four regional offices, covering twenty-nine states, for 2024 to 2026. "
+      say=f"The backbone is the Reserve Bank of India's official holiday list. We collected every bank holiday for all thirty-four regional offices, covering twenty-nine states, for {YEARS[0]} to {YEARS[-1]}. "
           f"That gave {len(obs):,} festival holiday records across {fm.festival.nunique()} festivals. "
           f"Each festival's tradition comes from its Wikipedia page or a government portal, and demography comes from Census 2011. "
           f"We also added {len(eco)} spending and crowd figures, each one checked on its original page."),
- dict(html=page(4, "02 &middot; Dataset", "How accurate is it? What the RBI list covers, and what it misses",
-                f'<div class="two"><div class="card good"><h3>What it captures well</h3><ul><li>The official, state-wise record of bank holidays, for every faith, in one consistent format.</li>'
-                f'<li>Holidays declared later in the year: our data includes <b>{n_adhoc} such dates</b> (elections, heavy rain, state mourning, the Ram temple consecration).</li>'
-                f'<li>Holidays on second and fourth Saturdays are listed.</li></ul></div>'
-                f'<div class="card warn"><h3>What it misses</h3><ul><li><b>Holidays that fall on a Sunday are not listed</b> (no Sunday date appears in three years of data), so roughly one festival day in seven is absent in any single year.</li>'
+ dict(html=page(4, "02 &middot; Dataset", "Keeping the count fair: what we corrected, and what the data cannot see",
+                f'<div class="two"><div class="card good"><h3>What we corrected</h3><ul><li><b>Sundays.</b> RBI lists no Sunday dates, so a festival on a Sunday vanishes that year. We average each festival only over the years it could be listed.</li>'
+                f'<li><b>Shared dates.</b> A festival a state is confirmed to observe counts in full, even when it shares its date. Evidence: RBI itself, the Central Government compulsory-holiday list, and each festival\'s home community.</li>'
+                f'<li><b>Late-declared holidays</b> are included: {n_adhoc} such dates (elections, heavy rain, state mourning).</li></ul></div>'
+                f'<div class="card warn"><h3>What the data cannot see</h3><ul><li>Festivals that carry no bank holiday at all, and union territories without an RBI office.</li>'
                 f'<li>Holidays only for government offices or schools, restricted (optional) holidays and district-level local holidays.</li>'
-                f'<li>RBI gives one combined label per date, so festivals sharing a date are split equally.</li></ul></div></div>'
-                '<div class="lede" style="margin-top:34px">So our numbers measure <b>official bank-holiday recognition</b>, not every celebration. We average three years to soften the Sunday gap.</div>'),
+                f'<li>{N_UNSURE} of {fm.festival.nunique()} festivals always share their date, so their state coverage stays uncertain. They are split and flagged.</li></ul></div></div>'
+                '<div class="lede" style="margin-top:34px">Our numbers measure <b>official bank-holiday recognition</b>, not how many people celebrate.</div>'),
       say=f"How accurate is this data? The RBI list is the official record of bank holidays, and it is updated when holidays are declared later. Our data includes {n_adhoc} such dates, for elections, heavy rain and state mourning. "
-          "But it has limits. A holiday that falls on a Sunday is not listed, so roughly one festival day in seven is missing in any single year. "
+          "We corrected two things that could under-count a festival. First, a holiday that falls on a Sunday is not listed, so we average each festival only over the years it could appear. "
+          "Second, when festivals share a date, a festival that a state is confirmed to observe still counts in full. "
           "Holidays meant only for government offices or schools, optional holidays, and district-level holidays are also not covered. "
-          "So our numbers measure official bank holiday recognition, not every celebration. We average three years to reduce the Sunday effect."),
+          "Even so, the data measures official bank holiday recognition, not how many people celebrate."),
  dict(html=page(5, "03 &middot; Statistics", "India's festival calendar peaks in March, April and October",
                 chart("F02_month_timeline_by_tradition.png", [("Mar &middot; Oct &middot; Apr", "the three busiest months"), ("p &lt; 0.001", "holidays are not spread evenly (chi-square test)"),
                                                              (f"p = {T.loc['H2', 'p_value']:.2f}", "a festival's season does not depend on its faith")], "1.75fr 1fr")),
@@ -158,18 +165,19 @@ SL = [
           "The differences are between individual states, not between the six broad regions."),
  dict(html=page(7, "03 &middot; Statistics", "Calendars follow demography, but are more plural than the population",
                 f'<div class="chart" style="margin-top:22px"><img src="{img("_demography_wide.png", S)}" style="max-height:470px"></div>' +
-                tiles([("0.42 to 0.71", "correlation between population share and holiday share, all six faiths tested"),
-                       ("46% vs 79.8%", "Hindu share of festival holidays vs share of population"),
+                tiles([(f"{RHO_LO:.2f} to {RHO_HI:.2f}", "correlation between population share and holiday share, all six faiths tested"),
+                       (f"{HIN:.0f}% vs 79.8%", "Hindu share of festival holidays vs share of population"),
                        ("Nationwide", "Christmas, Good Friday, both Eids, Buddha Purnima, Mahavir Jayanti, Guru Nanak Jayanti")], 3, small=True)),
-      say="Now, demography. For every faith we tested, a state's share of holidays for that faith rises with its share of the population. The correlations run from zero point four two to zero point seven one, and all are significant. "
-          "But the calendar is flatter than the population. Hindu festivals are about forty-six percent of festival holidays, against a population share near eighty percent. "
+      say=f"Now, demography. For every faith we tested, a state's share of holidays for that faith rises with its share of the population. The correlations run from {RHO_LO:.2f} to {RHO_HI:.2f}, and all are significant. "
+          f"But the calendar is flatter than the population. Hindu festivals are about {HIN:.0f} percent of festival holidays, against a population share near eighty percent. "
           "That is because Christmas, both Eids, Buddha Purnima, Mahavir Jayanti and Guru Nanak Jayanti are recognised almost nationwide."),
- dict(html=page(8, "04 &middot; Machine Learning", "Model 1: states group by calendar culture, not geography",
-                chart("M05_cluster_map.png", [(f"k = {A_['best_k']}", "clusters chosen by K-Means on each state's holiday mix"),
+ dict(html=page(8, "04 &middot; Machine Learning", "Model 1: one distinct group of states, and a continuum",
+                chart("M05_cluster_map.png", [(f"{A_['best_k']} groups", "is the strongest split: four north-eastern hill states versus the rest"),
                                               (f"{A_['silhouette']:.2f}", f"silhouette score; bootstrap stability {A_['bootstrap_ARI_mean']:.2f}"),
-                                              (f"{A_['ARI_clusters_vs_geographic_region']:.2f}", "agreement with geographic regions: almost none")], "1fr 1.05fr")),
+                                              (f"{A_['detail_silhouette']:.2f}", f"for the {A_['detail_k']}-group view on the map; agreement with regions {A_['detail_ARI_vs_geographic_region']:.2f}")], "1fr 1.05fr")),
       say=f"For machine learning, we first clustered states by the mix of their festival calendar. K-Means selected {A_['best_k']} clusters, with a silhouette score of {A_['silhouette']:.2f}. "
-          "Resampling shows the groups are reasonably stable. And they hardly match geographic regions. Neighbouring states often celebrate differently."),
+          "Four north-eastern hill states, Manipur, Meghalaya, Mizoram and Nagaland, stand apart, with far more Christian and tribal holidays. "
+          "A three group view also separates Delhi, Jammu and Kashmir, and Chhattisgarh. The rest of India is a continuum that does not follow regional blocks."),
  dict(html=page(9, "04 &middot; Machine Learning", "Model 2: can a festival's date and footprint reveal its faith?",
                 f'<div class="grid" style="grid-template-columns:1fr 1.15fr"><div class="pts">'
                 f'<div class="pt"><b>{B_["Random Forest"]["macro_f1_mean"]:.2f}</b><span>macro-F1 for the Random Forest, repeated 5-fold cross-validation</span></div>'
@@ -207,11 +215,11 @@ SL = [
  dict(html=page(13, "Summary", "Four things the data shows",
                 '<ul class="big"><li>The official festival calendar <b>peaks in March, April and October</b>.</li>'
                 '<li>Calendars <b>follow demography</b>, yet are <b>more plural than the population</b>.</li>'
-                '<li>States group by <b>calendar culture, not geography</b>.</li>'
+                '<li>Four north-eastern states have a <b>distinct calendar</b>; the rest is a <b>continuum, not regional blocks</b>.</li>'
                 '<li>Festive trade is <b>growing fast</b>, but it is <b>measured unevenly</b> across traditions.</li></ul>'
-                '<div class="lede" style="margin-top:30px">Limits: bank holidays only, Sundays not listed, Census 2011, industry trade estimates.</div>'),
+                '<div class="lede" style="margin-top:30px">Limits: bank holidays only, Census 2011, industry trade estimates, some shared dates remain uncertain.</div>'),
       say="To conclude. The official calendar peaks in spring and in October. It follows demography, yet it is more plural than the population. "
-          "States group by calendar culture, not geography. And festive trade is growing quickly, but it is measured unevenly across traditions. "
+          "Four north-eastern states have a distinct calendar, and the rest of India is a continuum. And festive trade is growing quickly, but it is measured unevenly across traditions. "
           "All our code, data and sources are public. Thank you."),
 ]
 assert len(SL) == N_SLIDES

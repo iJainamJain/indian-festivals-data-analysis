@@ -4,6 +4,7 @@ Output: report/DAV Project Report_23108B0084.docx / .pdf"""
 import os, copy, json
 import pandas as pd
 import docx
+from project_config import YEARS, PERIOD
 from docx.shared import Pt, Inches, RGBColor
 from docx.oxml.ns import qn
 
@@ -37,6 +38,12 @@ for _c, _t in zip(_r.cells, ["Team Members", "Jainam Jain, Vrushan Patil, Dhanus
     for _p in _c.paragraphs[1:]: _p._p.getparent().remove(_p._p)
     _runs = _c.paragraphs[0].runs; _runs[0].text = _t
     for _x in _runs[1:]: _x._r.getparent().remove(_x._r)
+sp = pd.read_csv(os.path.join(ROOT, "data", "processed", "state_profile.csv")).set_index("state")
+cr = pd.read_csv(os.path.join(ST, "T5_holiday_vs_population_share.csv"))
+raw_n = len(pd.read_csv(os.path.join(ROOT, "data", "raw", "rbi_holiday_matrix_raw.csv")))
+HIN = bytrad.set_index("tradition").loc["Hindu", "share_of_all_festival_holidays_pct"]
+RHO = f"{cr.spearman_rho.min():.2f}-{cr.spearman_rho.max():.2f}"
+top = sp.hol_days_total_festival.sort_values(ascending=False); N_UNSURE = int((~fm.reach_identifiable).sum())
 main = d.tables[2]
 proto_first, proto = copy.deepcopy(main.rows[0]._tr), copy.deepcopy(main.rows[1]._tr)
 for r in list(main.rows): main._tbl.remove(r._tr)
@@ -85,6 +92,7 @@ def _borders(tb):
     tblPr.append(b)
 
 h = T.set_index("id")
+A_, C_ = mls["A"], mls["C"]
 add_row("Mini Project", "Socio-Economic & Demographic Analysis of Indian Festivals", first=True)
 add_row("Problem Statement", [
     "India exhibits immense cultural and regional diversity, with hundreds of festivals celebrated across states, communities and calendar "
@@ -95,7 +103,7 @@ add_row("Problem Statement", [
 add_row("Resources", [
     "Software: Python 3.12, Windows 11, ffmpeg, Windows SAPI (System.Speech) for narration, Microsoft Word (PDF export), MS Edge + Playwright.",
     "Libraries: pandas, numpy, scipy, statsmodels, scikit-learn, joblib, matplotlib, plotly, requests, BeautifulSoup, xlrd, markdown.",
-    "Data sources (all real, cited per record): Reserve Bank of India holiday matrix 2024-26 (rbi.org.in); Census of India 2011 Table C-01 "
+    f"Data sources (all real, cited per record): Reserve Bank of India holiday matrix {PERIOD} (rbi.org.in); DoPT compulsory-holiday list (O.M. F.No.12/2/2023-JCA); Census of India 2011 Table C-01 "
     "(censusindia.gov.in); Wikipedia infoboxes via MediaWiki API + Govt. portals (utsav.gov.in, soreng.nic.in, dtahills.mn.gov.in, megtourism.gov.in); "
     "CAIT (cait.in) and verified news for spending; NRF, gov.cn, GASTAT, muenchen.de for global analogues; DataMeet state boundaries (CC BY 2.5 IN)."])
 add_row("Deliverables", [
@@ -105,9 +113,10 @@ add_row("Deliverables", [
     "Task 4 - blog/blog_post.md|html, blog/images, blog/interactive/*.html, blog/engagement (log template, audit report)",
     "Task 5 - video/Indian_Festivals_Project_Report.mp4 (1080p, narrated), video/narration_script.md, this report"])
 add_row("Approach", [
-    "1. Scrape the RBI holiday matrix for every office/month/year (2,031 office-date rows), save raw HTML + CSV with source URL per row.",
-    "2. Build a 99-festival regex catalog; resolve each RBI label into festivals; split shared-date closures with attribution_weight = 1/k; "
-    "flag festivals whose reach is not identifiable.",
+    f"1. Scrape the RBI holiday matrix for every office and month of {YEARS[0]}-{YEARS[-1]} ({raw_n:,} office-date rows), save raw HTML + CSV with source URL per row.",
+    f"2. Build a {fm.festival.nunique()}-festival regex catalog and resolve each RBI label into festivals. Shared dates are credited by evidence: a festival counts in full "
+    "where the office is confirmed to observe it (closed on a date where it stood alone, on the DoPT compulsory list and never absent, or the festival's home community); "
+    "the rest is split by an evidence score and flagged. Sunday correction: each festival is averaged only over the years it could be listed.",
     "3. Source-ground each festival's tradition from its Wikipedia infobox ('Observed by') or an official Govt. page.",
     "4. Download Census 2011 C-01, map 34 RBI offices to 29 states/UTs, build festival-, observation- and state-level tables.",
     "5. Collect 78 economic/footfall figures; open every page to confirm the figure (snippet-only figures were excluded).",
@@ -124,27 +133,27 @@ add_row("Code", [("code", "01_scrape_rbi_holidays.py   02_verify_wikipedia.py   
                           'obs["attribution_weight"] = 1 / obs["n_items_on_date"]\n'
                           'obs["attribution"] = np.where(obs["n_items_on_date"] == 1, "unique", "shared_date")')])
 add_row("Task 1: Dataset", [
-    f"{len(obs):,} festival-holiday observations | {fm.festival.nunique()} festivals | 34 RBI offices | 29 states/UTs | 2024-2026 | "
+    f"{len(obs):,} festival-holiday observations | {fm.festival.nunique()} festivals | 34 RBI offices | 29 states/UTs | {YEARS[0]}-{YEARS[-1]} | "
     f"{len(eco)} verified economic/footfall records | Census 2011 demography. Zero synthetic records.",
     ("table", bytrad[["tradition", "festivals", "holiday_days_per_office_per_year", "share_of_all_festival_holidays_pct", "pct_lunar"]]
      .rename(columns={"holiday_days_per_office_per_year": "holiday-days/office/yr", "share_of_all_festival_holidays_pct": "% of festival holidays",
                       "pct_lunar": "% moving-date"})),
-    "Limitations: RBI publishes one combined label per date, so co-listed festivals share the day (39 of 99 festivals never appear alone -> "
-    "reach flagged not identifiable); bank holidays measure official recognition, not participation; trade figures are industry estimates."])
+    f"Limitations: {N_UNSURE} of {fm.festival.nunique()} festivals always share their date, so their state coverage stays uncertain (flagged); festivals without a bank holiday, restricted and "
+    "district-level holidays and UTs without an RBI office are not covered; bank holidays measure official recognition, not participation; trade figures are industry estimates."])
 tt = T[["id", "test", "statistic", "p_value", "result"]].copy(); tt["test"] = tt["test"].str.slice(0, 48)
 tt["p_value"] = tt["p_value"].map(lambda v: "< 0.001" if v < 0.001 else f"{v:.3f}"); tt["statistic"] = tt["statistic"].map(lambda v: f"{v:.3f}")
 add_row("Task 3: Statistics", [
     ("table", desc[["n", "mean", "median", "std", "skewness"]].reset_index().rename(columns={"index": "variable"})),
     ("table", tt),
     f"H1: holidays cluster by month (chi2 = {h.loc['H1', 'statistic']:.0f}, p < 0.001; peaks Mar, Oct, Apr). H2: season independent of tradition "
-    f"(perm. p = {h.loc['H2', 'p_value']:.2f}). H3: holiday share correlates with population share for all six faiths (rho 0.42-0.71, p < 0.05). "
-    f"H4-H7 not significant. H9: festive trade grows {h.loc['H9', 'interpretation'].split('growth ')[1].split(')')[0]})."])
+    f"(perm. p = {h.loc['H2', 'p_value']:.2f}). H3: holiday share correlates with population share for all six faiths (rho {RHO}, all p < 0.05 after Holm correction). "
+    f"H4: reach differs by tradition group (p = {h.loc['H4', 'p_value']:.3f}). H5-H8 not significant. H9: festive trade grows {h.loc['H9', 'interpretation'].split('growth ')[1].split(')')[0]})."])
 A_, C_ = mls["A"], mls["C"]
 add_row("Task 2: Machine Learning", [
     ("b", "A. Clustering states (K-Means vs Ward)"),
     f"Features: Hindu/Muslim/Christian/Tribal shares of festival holidays (chosen by a documented feature-set experiment). k = {A_['best_k']} "
     f"(silhouette {A_['silhouette']:.3f}); bootstrap ARI {A_['bootstrap_ARI_mean']:.2f} +/- {A_['bootstrap_ARI_sd']:.2f}; ARI vs region {A_['ARI_clusters_vs_geographic_region']:.2f}.",
-    "; ".join(f"{k}: {', '.join(v)}" for k, v in A_["clusters"].items()),
+    "; ".join(f"{k}: {', '.join(v)}" for k, v in A_["detail_clusters"].items()) + f" (the {A_['detail_k']}-group view, silhouette {A_['detail_silhouette']:.2f}).",
     ("b", "B. Tradition classifier (5-fold x 20 repeated stratified CV)"),
     ("table", clsm.round(3)),
     ("b", "C. Festive-trade regression (log-linear, festival fixed effects)"),
@@ -162,7 +171,7 @@ add_row("Task 5: Video", [
     "ML architecture & performance, economics, blog & reception, takeaways. The reception slide reads engagement_metrics.json; re-run "
     "10_make_video.py after publishing to produce the final cut."])
 add_row("Output Visuals", [
-    ("img", "F02_month_timeline_by_tradition.png", "Fig 1. Festival bank-holiday days by month and tradition (RBI 2024-26)."),
+    ("img", "F02_month_timeline_by_tradition.png", f"Fig 1. Festival bank-holiday days by month and tradition (RBI {PERIOD})."),
     ("img", "F04_state_month_heatmap.png", "Fig 2. State x month heatmap.", 4.2),
     ("img", "F05_map_festival_holidays.png", "Fig 3. Festival holidays per year by state."),
     ("img", "F07_holiday_vs_population_share.png", "Fig 4. Holiday share vs Census population share."),
@@ -175,13 +184,13 @@ add_row("Output Visuals", [
     ("img", "M03_classifier_results.png", "Fig 10. Classifier confusion matrix and permutation importance."),
     ("img", "M04_trade_regression.png", "Fig 11. Trade model: LOO and 2026 hold-out predictions.", 3.8)])
 add_row("Insights", [
-    "1. Festival holidays peak in March (2.7 days/office), October (2.5) and April (2.1); February and July are quietest.",
-    "2. Every faith's holiday share rises with its population share (Spearman 0.42-0.71), yet the calendar is more plural than the population: "
-    "Hindu festivals are ~46% of festival holidays vs 79.8% of population, because Christmas, Good Friday, both Eids, Buddha Purnima, "
+    "1. Festival holidays peak in April, October and March (about 2.6-2.8 days per office each); January, February and July are quietest.",
+    f"2. Every faith's holiday share rises with its population share (Spearman {RHO}), yet the calendar is more plural than the population: "
+    f"Hindu festivals are ~{HIN:.0f}% of festival holidays vs 79.8% of population, because Christmas, Good Friday, both Eids, Buddha Purnima, "
     "Mahavir Jayanti and Guru Nanak Jayanti are gazetted almost nationwide.",
-    "3. Sikkim (21.2), Uttar Pradesh (19.8) and Jharkhand (19.1) have the most festival holidays; Goa (11.3) the fewest. Regions do not differ significantly.",
-    "4. States cluster by calendar culture, not geography (ARI vs region 0.03).",
-    "5. A festival's date and footprint only weakly reveal its faith (macro-F1 0.40): nationwide festivals of all faiths look alike.",
+    f"3. {top.index[0]} ({top.iloc[0]:.1f}), {top.index[1]} ({top.iloc[1]:.1f}) and {top.index[2]} ({top.iloc[2]:.1f}) have the most festival holidays; {top.index[-1]} ({top.iloc[-1]:.1f}) the fewest. Regions do not differ significantly.",
+    f"4. The strongest state grouping is {A_['best_k']} clusters (four north-eastern hill states vs the rest, silhouette {A_['silhouette']:.2f}); calendars otherwise form a continuum that does not follow regions (ARI {A_['detail_ARI_vs_geographic_region']:.2f}).",
+    f"5. A festival's date and footprint only weakly reveal its faith (macro-F1 {clsm.set_index('model').loc['Random Forest', 'macro_f1_mean']:.2f}): nationwide festivals of all faiths look alike.",
     "6. Reported festive trade grows ~34%/yr (Diwali: Rs 1.25 lakh cr in 2021 -> Rs 6.05 lakh cr in 2025), but national spending estimates "
     "exist mainly for Hindu festivals - a measurement blind spot."])
 add_row("Conclusion", [

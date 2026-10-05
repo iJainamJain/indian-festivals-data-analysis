@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 import viz_style as vs
+from project_config import PERIOD, N_YEARS
 
 warnings.filterwarnings("ignore")
 vs.apply()
@@ -17,7 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = os.path.join(ROOT, "data", "processed")
 FIG, ST = os.path.join(ROOT, "outputs", "figures"), os.path.join(ROOT, "outputs", "stats")
 os.makedirs(FIG, exist_ok=True); os.makedirs(ST, exist_ok=True)
-SRC_RBI = "Reserve Bank of India holiday matrix 2024-26 (rbi.org.in)"
+SRC_RBI = f"Reserve Bank of India holiday matrix {PERIOD} (rbi.org.in)"
 SRC_CEN = "Census of India 2011, Table C-01 (censusindia.gov.in)"
 
 obs = pd.read_csv(os.path.join(P, "festival_observations.csv"))
@@ -27,7 +28,7 @@ eco = pd.read_csv(os.path.join(P, "economic_footfall_clean.csv"))
 obs["tgroup"] = obs["tradition"].map(vs.trad_group); fm["tgroup"] = fm["tradition"].map(vs.trad_group)
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 report = ["# Statistical Valuation & EDA Report\n",
-          "All tests two-sided, alpha = 0.05. Data: RBI holiday matrix 2024-26 (34 offices, 29 states/UTs), "
+          f"All tests two-sided, alpha = 0.05. Data: RBI holiday matrix {PERIOD} (34 offices, 29 states/UTs), Sunday-corrected, "
           "Census 2011 C-01, and 78 verified economic/footfall records.\n"]
 def save(fig, name, src):
     vs.source_note(fig, src); fig.savefig(os.path.join(FIG, name)); plt.close(fig)
@@ -55,7 +56,7 @@ by_trad = fm.groupby("tradition").agg(festivals=("festival", "size"),
                                       median_expected_states=("expected_states_per_year", "median"),
                                       mean_duration_days=("mean_holiday_days", "mean"),
                                       pct_lunar=("calendar_basis", lambda x: 100 * x.str.startswith("Lunar").mean())).round(2)
-w = obs.groupby("tradition")["attribution_weight"].sum() / 34 / 3
+w = obs.groupby("tradition")["annual_weight"].sum() / 34
 by_trad["holiday_days_per_office_per_year"] = w.round(2)
 by_trad["share_of_all_festival_holidays_pct"] = (100 * w / w.sum()).round(1)
 by_trad.sort_values("festivals", ascending=False).to_csv(os.path.join(ST, "T2_by_tradition.csv"))
@@ -73,7 +74,7 @@ ax[2].set(title="Festive trade estimates", xlabel="log10(INR crore)", ylabel="Re
 fig.tight_layout(); save(fig, "F01_distributions.png", f"{SRC_RBI}; CAIT & other cited trade estimates (economic_footfall_clean.csv)")
 
 # ============ 2. TEMPORAL: month-wise density timeline ============================================
-mt = obs.groupby(["month", "tgroup"])["attribution_weight"].sum().unstack(fill_value=0) / 34 / 3
+mt = obs.groupby(["month", "tgroup"])["annual_weight"].sum().unstack(fill_value=0) / 34
 mt = mt.reindex(index=range(1, 13), columns=vs.TRAD_ORDER, fill_value=0)
 mt.round(3).to_csv(os.path.join(ST, "T3_month_by_tradition_holiday_days.csv"))
 fig, ax = plt.subplots(figsize=(11, 4.4))
@@ -83,10 +84,10 @@ for t in vs.TRAD_ORDER:
     bottom += mt[t].values
 for i, v in enumerate(bottom): ax.text(i, v + 0.03, f"{v:.1f}", ha="center", fontsize=8, color=vs.INK2)
 ax.set_xticks(range(12), MONTHS); ax.set_ylabel("Festival bank-holiday days per office")
-ax.set_title("When India celebrates: festival holidays by month and tradition (2024-26 average)")
+ax.set_title(f"When India celebrates: festival holidays by month and tradition ({PERIOD} average)")
 ax.set_ylim(0, bottom.max() * 1.12)
 ax.legend(fontsize=9, loc="upper left", bbox_to_anchor=(1.01, 1.0), title="Tradition", title_fontsize=9, alignment="left"); ax.grid(axis="x", visible=False)
-save(fig, "F02_month_timeline_by_tradition.png", SRC_RBI + ". Shared-date holidays split equally among co-listed items.")
+save(fig, "F02_month_timeline_by_tradition.png", SRC_RBI + ". Sunday-corrected; shared dates credited by evidence score.")
 
 # distinct festivals per month (festival "density")
 dens = obs.groupby("month")["festival"].nunique().reindex(range(1, 13), fill_value=0)
@@ -132,7 +133,23 @@ for faith, hcol, ccol in [("Hindu", "hol_share_hindu", "census_pct_hindu"), ("Mu
                   "test": "Spearman rank correlation (n=29 states/UTs)", "statistic": r, "df": 27, "p_value": p,
                   "effect_size": r, "result": "Reject H0" if p < .05 else "Fail to reject H0",
                   "interpretation": f"slope {slope:.2f} holiday-pp per population-pp"})
-cr = pd.DataFrame(corr_rows).round(4); cr.to_csv(os.path.join(ST, "T5_holiday_vs_population_share.csv"), index=False)
+cr = pd.DataFrame(corr_rows)
+# robustness: 95% bootstrap CI (5,000 resamples of states) and Holm correction across the six faith tests
+_rng = np.random.default_rng(42); lo, hi = [], []
+for faith, hcol, ccol in [("Hindu", "hol_share_hindu", "census_pct_hindu"), ("Muslim", "hol_share_muslim", "census_pct_muslim"),
+                          ("Christian", "hol_share_christian", "census_pct_christian"), ("Sikh", "hol_share_sikh", "census_pct_sikh"),
+                          ("Buddhist", "hol_share_buddhist", "census_pct_buddhist"), ("Jain", "hol_share_jain", "census_pct_jain")]:
+    bs = []
+    for _ in range(5000):
+        ix = _rng.integers(0, len(sp), len(sp)); r_ = stats.spearmanr(sp[ccol].values[ix], sp[hcol].values[ix])[0]
+        if not np.isnan(r_): bs.append(r_)
+    lo.append(np.percentile(bs, 2.5)); hi.append(np.percentile(bs, 97.5))
+cr["rho_ci95_low"], cr["rho_ci95_high"] = lo, hi
+_order = np.argsort(cr.p_value.values); _adj = np.empty(len(cr)); _run = 0
+for rank, i in enumerate(_order):
+    _run = max(_run, min(1, cr.p_value.values[i] * (len(cr) - rank))); _adj[i] = _run
+cr["p_holm"] = _adj
+cr = cr.round(4); cr.to_csv(os.path.join(ST, "T5_holiday_vs_population_share.csv"), index=False)
 
 # H4: reach differs by tradition? (Kruskal-Wallis, identifiable festivals only)
 idf = fm[fm.reach_identifiable]
@@ -165,8 +182,6 @@ for var, lab in [("hol_days_total_festival", "festival holidays/yr"), ("holiday_
                   "interpretation": "; ".join(f"{r}={v:.2f}" for r, v in sp.groupby('region')[var].median().items())})
 
 # H7: population diversity vs holiday diversity (do more religiously diverse states host a more diverse holiday calendar?)
-pc = sp[[c for c in sp.columns if c.startswith("census_pct_")]] / 100
-sp["population_diversity_shannon"] = -(pc.where(pc > 0).apply(np.log) * pc).sum(axis=1)
 r7, p7 = stats.spearmanr(sp.population_diversity_shannon, sp.holiday_diversity_shannon)
 tests.append({"id": "H7", "question": "Are religiously more diverse states (Census) also more diverse in festival holidays?",
               "test": "Spearman rank correlation", "statistic": r7, "df": 27, "p_value": p7, "effect_size": r7,
@@ -224,8 +239,8 @@ ax.set_title("State-level correlation matrix: holiday calendar vs religious demo
 save(fig, "F03_correlation_matrix.png", f"{SRC_RBI}; {SRC_CEN}")
 
 # ============ 5. STATE-WISE HEATMAP (state x month) =============================================
-sm = obs.groupby(["state", "month"])["attribution_weight"].sum().unstack(fill_value=0).reindex(columns=range(1, 13), fill_value=0)
-sm = sm.div(sp["n_rbi_offices"], axis=0) / 3
+sm = obs.groupby(["state", "month"])["annual_weight"].sum().unstack(fill_value=0).reindex(columns=range(1, 13), fill_value=0)
+sm = sm.div(sp["n_rbi_offices"], axis=0)
 REG_ORDER = ["North", "Central", "East", "West", "South", "North-East"]
 order = sp.assign(_r=sp.region.map(REG_ORDER.index)).sort_values(["_r", "hol_days_total_festival"], ascending=[True, False]).index
 sm = sm.loc[order]; sm.round(3).to_csv(os.path.join(ST, "T8_state_by_month_holiday_days.csv"))
@@ -249,7 +264,7 @@ for k in range(1, len(regs) + 1):
                 fontsize=9.5, fontweight="bold", color=vs.INK2)
         b0 = k
 cb = fig.colorbar(im, ax=ax, orientation="horizontal", fraction=0.025, pad=0.02, aspect=40)
-cb.set_label("Festival bank-holiday days per RBI office per year (2024-26 avg); numbers shown for cells >= 1 day", fontsize=9.5)
+cb.set_label(f"Festival bank-holiday days per RBI office per year ({PERIOD} avg); numbers shown for cells >= 1 day", fontsize=9.5)
 cb.outline.set_visible(False)
 ax.set_title("State-wise festival heatmap: when each state's holidays fall", pad=30, fontsize=15)
 fig.tight_layout()
@@ -370,9 +385,8 @@ report += ["## 3. Comparative analysis\n", "### Global spending analogues (USD b
            sp.sort_values("hol_days_total_festival", ascending=False)[["region", "hol_days_total_festival", "n_distinct_festivals",
                "holiday_diversity_shannon", "population_diversity_shannon"]].round(2).to_markdown(), "\n",
            "### Season (IMD) comparison\n",
-           obs.groupby("season_imd")["attribution_weight"].sum().div(34 * 3).round(2).rename("holiday_days_per_office_per_year").to_markdown(), "\n",
+           obs.groupby("season_imd")["annual_weight"].sum().div(34).round(2).rename("holiday_days_per_office_per_year").to_markdown(), "\n",
            "### Distinct festivals observed per month\n", dens.rename(index=dict(enumerate(MONTHS, 1))).to_markdown(), "\n"]
-sp.to_csv(os.path.join(P, "state_profile.csv"))  # now includes population_diversity_shannon
 open(os.path.join(ST, "statistical_summary.md"), "w", encoding="utf-8").write("\n".join(report))
 print(T[["id", "test", "statistic", "p_value", "effect_size", "result"]].to_string())
 print("\n", cr.to_string())

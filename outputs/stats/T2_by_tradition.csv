@@ -1,10 +1,10 @@
 tradition,festivals,mean_expected_states,median_expected_states,mean_duration_days,pct_lunar,holiday_days_per_office_per_year,share_of_all_festival_holidays_pct
-Hindu,45,3.98,1.74,1.04,68.89,7.22,46.5
-Tribal/Indigenous,22,1.53,1.0,1.0,63.64,1.13,7.3
-Muslim,7,10.15,8.0,1.01,100.0,2.69,17.3
-Christian,7,8.38,1.0,1.01,14.29,2.1,13.5
-Buddhist,6,2.74,1.0,1.05,83.33,0.63,4.0
-Sikh,5,2.35,0.67,1.0,60.0,0.43,2.8
-Cultural (multi-faith),4,3.28,3.19,1.07,25.0,0.51,3.3
-Jain,2,5.06,5.06,1.0,100.0,0.37,2.4
-Parsi,1,12.89,12.89,1.0,0.0,0.44,2.9
+Hindu,45,4.48,1.51,1.06,77.78,8.58,49.4
+Tribal/Indigenous,23,1.19,1.0,1.0,60.87,0.91,5.2
+Buddhist,7,2.54,1.0,1.09,71.43,0.69,4.0
+Muslim,7,12.34,15.09,1.02,100.0,3.41,19.6
+Christian,7,8.21,1.0,1.01,14.29,2.07,11.9
+Sikh,5,3.93,1.0,1.0,80.0,0.73,4.2
+Cultural (multi-faith),4,1.9,1.96,1.38,25.0,0.36,2.1
+Jain,2,7.35,7.35,1.0,100.0,0.53,3.1
+Parsi,1,1.0,1.0,1.0,0.0,0.09,0.5

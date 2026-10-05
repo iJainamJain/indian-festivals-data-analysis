@@ -1,5 +1,5 @@
 """Task 1a - Scrape the Reserve Bank of India holiday matrix (Negotiable Instruments Act holidays)
-for every RBI regional office (state/UT proxy), every month, 2024-2026.
+for every RBI regional office (state/UT proxy), every month of the study period (project_config.YEARS).
 Source: https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx  (official Government of India / RBI portal)
 Output: data/raw/rbi_holiday_matrix_raw.csv  (one row per office x date x holiday)
 """
@@ -10,7 +10,8 @@ from bs4 import BeautifulSoup
 URL = "https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, "data", "raw")
-YEARS = ["2024", "2025", "2026"]
+from project_config import YEARS as _Y
+YEARS = [str(y) for y in _Y]
 
 S = requests.Session(); S.headers["User-Agent"] = "Mozilla/5.0 (academic research; DAV project)"
 

@@ -1,7 +1,7 @@
-,0,1,2,3
-hol_share_hindu,35.34,53.19,36.0,36.07
-hol_share_muslim,13.55,15.24,26.62,14.82
-hol_share_christian,27.01,11.3,13.68,16.73
-hol_share_tribal_indigenous,9.46,5.25,4.43,23.77
-n_states,4,18,4,3
-name,C1: above-avg Christian holiday share,C2: above-avg Hindu holiday share,C3: above-avg Muslim holiday share,C4: above-avg Tribal Indigenous holiday share
+,0,1
+hol_share_hindu,52.75,28.22
+hol_share_muslim,18.91,16.39
+hol_share_christian,11.22,26.89
+hol_share_tribal_indigenous,2.95,23.62
+n_states,25,4
+name,C1: typical mix,C2: more Tribal/Indigenous & Christian holidays than average
