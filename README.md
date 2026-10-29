@@ -2,6 +2,8 @@
 
 DAV team project by Jainam Jain (23108B0084), Vrushan Patil (23108B0079), Dhanush Chowke (23108B0080), Aditya Tambe (23108B0077) and Vivek Jaiswal (23108B0082), B.E. Sem VII ECS, VIT. The brief is in `project details.PDF`.
 
+**Live dashboard:** https://ijainamjain.github.io/indian-festivals-data-analysis/
+
 ## Deliverables map
 
 | Task | Deliverable | Where |
