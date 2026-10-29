@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>India Festival Analytics</title>
+<script>/*PLOTLY*/</script>
+<style>
+:root{
+  --navy:#0d366b; --navy2:#184f95; --blue:#256abf; --blue3:#3987e5; --pale:#eef3fa;
+  --bg:#f3f5f8; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --muted:#8a8984; --line:#e4e3df;
+  --good:#1baf7a; --bad:#b3261e; --warn:#eda100;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#0b2d59 0%,#0d366b 55%,#184f95 100%);color:#fff;padding:22px 32px 20px}
+.hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+header h1{margin:0;font-size:28px;letter-spacing:.5px;font-weight:700}
+header .sub{margin-top:6px;font-size:14px;opacity:.85}
+.pill{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 16px;font-size:13px;background:rgba(255,255,255,.08);white-space:nowrap}
+.team{margin-top:10px;font-size:12px;opacity:.7}
+nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:10px 32px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:#f7f8fa;color:var(--ink2);padding:8px 14px;border-radius:8px;font:600 13.5px "Segoe UI",sans-serif;cursor:pointer}
+nav button:hover{background:var(--pale);color:var(--navy)}
+nav button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+nav .sp{flex:1}
+nav label{font-size:13px;color:var(--ink2);font-weight:600}
+select,input[type=search]{font:14px "Segoe UI",sans-serif;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+main{padding:22px 32px 40px;max-width:1500px;margin:0 auto}
+.tab{display:none}.tab.on{display:block}
+.thead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.thead h2{margin:0;font-size:21px}
+.thead p{margin:4px 0 0;color:var(--ink2);font-size:13.5px;max-width:900px}
+.tag{font-size:11.5px;font-weight:700;letter-spacing:1.2px;color:var(--navy);text-transform:uppercase}
+.grid{display:grid;gap:16px}
+.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c3{grid-template-columns:2fr 1fr}
+.c3r{grid-template-columns:1fr 2fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 1px 2px rgba(13,54,107,.04);min-width:0}
+.card h3{margin:0;font-size:15px}
+.card .cs{margin:3px 0 6px;color:var(--ink2);font-size:12.5px}
+.card .src{margin-top:4px;color:var(--muted);font-size:11px}
+.kpi{position:relative;overflow:hidden}
+.kpi .kl{font-size:12.5px;color:var(--ink2);font-weight:600}
+.kpi .kv{font-size:30px;font-weight:800;margin:6px 0 2px;color:var(--ink);line-height:1.1}
+.kpi .kn{font-size:12px;color:var(--ink2)}
+.kpi:after{content:"";position:absolute;right:-22px;top:-22px;width:80px;height:80px;border-radius:50%;background:var(--pale)}
+.up{color:var(--good);font-weight:700}.down{color:var(--bad);font-weight:700}
+.plot{width:100%;height:340px}
+.plot.tall{height:460px}.plot.xl{height:620px}.plot.sm{height:280px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;color:var(--ink2);font-weight:600;border-bottom:2px solid var(--line);padding:7px 8px;position:sticky;top:0;background:#fff}
+td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{max-height:520px;overflow:auto}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.b-rej{background:#e3f5ec;color:#0f6b49}.b-fail{background:#f1f0ec;color:#52514e}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin:6px 0 2px}
+.ramp{height:10px;border-radius:5px;margin:4px 0 2px}
+.ramplab{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2)}
+.statebox .big{font-size:22px;font-weight:800}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.mini div{background:var(--pale);border-radius:10px;padding:8px 10px}
+.mini b{display:block;font-size:18px}
+.mini span{font-size:11.5px;color:var(--ink2)}
+.list{font-size:12.5px;color:var(--ink2);line-height:1.6}
+.note{background:var(--pale);border-left:4px solid var(--blue);padding:10px 14px;border-radius:8px;font-size:13px;color:var(--ink2);margin:0 0 16px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.step{background:var(--pale);border-radius:12px;padding:12px 14px}
+.step b{display:block;color:var(--navy);margin-bottom:4px}
+.step span{font-size:12.5px;color:var(--ink2)}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+footer{color:var(--muted);font-size:11.5px;text-align:center;padding:10px 0 26px}
+@media (max-width:1100px){.k4{grid-template-columns:repeat(2,minmax(0,1fr))}.c2,.c3,.c3r{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){header,nav,main{padding-left:16px;padding-right:16px}.k4{grid-template-columns:1fr}.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <h1>INDIAN FESTIVALS ANALYTICS</h1>
+      <div class="sub">Socio-economic &amp; demographic analysis · RBI bank-holiday calendars · statistical validation · ML evaluation</div>
+      <div class="team">Jainam Jain · Vrushan Patil · Dhanush Chowke · Aditya Tambe · Vivek Jaiswal — B.E. Sem VII ECS, VIT</div>
+    </div>
+    <div class="pill" id="hpill"></div>
+  </div>
+</header>
+<nav>
+  <button data-t="ov" class="on">Overview</button>
+  <button data-t="geo">Geographic View</button>
+  <button data-t="fest">Festivals &amp; Traditions</button>
+  <button data-t="st">Statistical Analysis</button>
+  <button data-t="ml">ML Evaluation</button>
+  <button data-t="pr">Predictions &amp; Errors</button>
+  <button data-t="data">Data &amp; Method</button>
+  <span class="sp"></span>
+  <label for="yr">Selected year</label>
+  <select id="yr"></select>
+</nav>
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="tab on" id="ov">
+  <div class="thead"><div><h2>Festival Calendar Overview</h2><p id="ovsub"></p></div><div class="tag">Executive summary</div></div>
+  <div class="grid k4" id="kpis"></div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>When India celebrates</h3><div class="cs">Festival bank-holiday days per RBI office, by month and tradition</div><div id="p_month" class="plot"></div><div class="src">Source: RBI holiday matrix</div></div>
+    <div class="card"><h3>Festival holidays by State/UT</h3><div class="cs" id="topsub">Top 12 states</div><div id="p_top" class="plot"></div><div class="src">Source: RBI holiday matrix; states with several RBI offices are averaged</div></div>
+  </div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>Holiday share vs population share</h3><div class="cs">Share of all festival holidays (%) compared with share of India's population (Census 2011)</div><div id="p_share" class="plot"></div><div class="src">Sources: RBI holiday matrix; Census of India 2011, Table C-01</div></div>
+    <div class="card"><h3>Most widely observed festivals</h3><div class="cs">Holiday-days per RBI office, top 15</div><div class="legend" id="tleg"></div><div id="p_fest" class="plot"></div><div class="src">Source: RBI holiday matrix; tradition from Wikipedia / Government pages</div></div>
+  </div>
+</section>
+
+<!-- ============ GEO ============ -->
+<section class="tab" id="geo">
+  <div class="thead"><div><h2>Geographic View</h2><p>Hover a state for its numbers; click it (or pick it from the list) to see its festival mix.</p></div>
+    <div class="ctrl"><label class="tag" for="metric">Colour by</label><select id="metric"></select></div></div>
+  <div class="grid c3">
+    <div class="card"><h3 id="maptitle"></h3><div class="cs" id="mapsub"></div><div id="maplegend"></div><div id="p_map" class="plot xl"></div><div class="src">Boundaries: DataMeet (CC BY 2.5 IN), simplified for display. Grey = no RBI regional office.</div></div>
+    <div class="card statebox"><div class="ctrl"><label class="tag" for="stsel">State</label><select id="stsel"></select></div>
+      <div class="big" id="stname"></div><div class="cs" id="stregion"></div>
+      <div class="mini" id="stmini"></div>
+      <h3 style="margin-top:6px">Holidays vs population, by faith</h3>
+      <div id="p_state" class="plot sm"></div>
+      <h3>Festivals with a bank holiday here</h3><div class="cs">Holiday-days per year in brackets</div><div class="list" id="stfest"></div>
+    </div>
+  </div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>Festival holidays by region</h3><div class="cs">One dot per state/UT; box shows the middle half</div><div id="p_region" class="plot"></div><div class="src">Kruskal-Wallis test: regions do not differ significantly (p = 0.80)</div></div>
+    <div class="card"><h3>Tradition mix by region</h3><div class="cs">Share of festival holidays (%)</div><div id="p_regmix" class="plot"></div><div class="src">Source: RBI holiday matrix</div></div>
+  </div>
+</section>
+
+<!-- ============ FESTIVALS ============ -->
+<section class="tab" id="fest">
+  <div class="thead"><div><h2>Festivals &amp; Traditions</h2><p>101 festivals from 9 traditions. Reach = states giving a bank holiday in a typical year (Sunday-corrected).</p></div></div>
+  <div class="grid c2">
+    <div class="card"><h3>Tradition × month</h3><div class="cs">Holiday-days per RBI office</div><div id="p_heat" class="plot"></div><div class="src">Source: RBI holiday matrix</div></div>
+    <div class="card"><h3>Festivals and reach by tradition</h3><div class="cs">Number of festivals (bar) and median states reached per year (label)</div><div id="p_trad" class="plot"></div><div class="src">Source: festival master table</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="ctrl"><h3 style="margin-right:auto">Festival explorer</h3><select id="ftrad"></select><input type="search" id="fq" placeholder="Search festival or state…"></div>
+    <div class="scroll"><table id="ftab"></table></div>
+    <div class="src">Certainty = how surely the festival's holidays are attributed to it (shared-date evidence score). Below 0.5 the reach is flagged as uncertain.</div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="tab" id="st">
+  <div class="thead"><div><h2>Statistical Analysis</h2><p>All tests two-sided, α = 0.05, full period. Non-parametric tests are used because n is small and the data are skewed.</p></div><div class="tag">Hypothesis testing</div></div>
+  <div class="card"><h3>Hypothesis tests</h3><div class="scroll" style="max-height:none"><table id="ttab"></table></div></div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><div class="ctrl"><h3 style="margin-right:auto">Do holidays follow population?</h3><select id="faith"></select></div><div class="cs" id="scsub"></div><div id="p_scatter" class="plot tall"></div><div class="src">One dot per state/UT. Sources: RBI holiday matrix; Census 2011 C-01</div></div>
+    <div class="card"><h3>H1 · Chi-square goodness-of-fit by month</h3><div class="cs">Observed holiday-days vs a uniform spread (χ² = 825.5, df = 11, p &lt; 0.001)</div><div id="p_chi" class="plot tall"></div><div class="src">Weighted office-days, full period</div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Spearman correlation per faith, with 95% bootstrap CI</h3><div class="cs">Holm-adjusted p-values; all six are significant, Muslim is the weakest</div><div id="p_rho" class="plot sm"></div></div>
+</section>
+
+<!-- ============ ML ============ -->
+<section class="tab" id="ml">
+  <div class="thead"><div><h2>ML Evaluation</h2><p>Three models: K-Means clustering of state calendars, a Random Forest that predicts a festival's tradition, and a log-linear regression of festive trade.</p></div><div class="tag">Model comparison</div></div>
+  <div class="grid k4" id="mlk"></div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>A · Choosing the number of clusters</h3><div class="cs">Silhouette score (higher = better separated)</div><div id="p_k" class="plot"></div><div class="src">K-Means vs Ward agreement (ARI) shown on hover</div></div>
+    <div class="card"><h3>A · Cluster membership</h3><div class="cs" id="clsub"></div><div id="cllist" class="list"></div></div>
+  </div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>B · Classifier vs baseline</h3><div class="cs">Macro-F1, repeated stratified 5-fold × 20 (error bar = 1 SD)</div><div id="p_clf" class="plot"></div></div>
+    <div class="card"><h3>B · What the Random Forest uses</h3><div class="cs">Permutation importance (drop in macro-F1), top 10 features</div><div id="p_imp" class="plot"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>B · Per-class performance (Random Forest)</h3><div class="cs">Precision, recall and F1 per tradition group</div><div id="p_pcr" class="plot sm"></div></div>
+</section>
+
+<!-- ============ PREDICTIONS ============ -->
+<section class="tab" id="pr">
+  <div class="thead"><div><h2>Predictions &amp; Errors</h2><p>Model C predicts national festive trade (₹ crore) from festival and year. Errors are leave-one-out: each record is predicted by a model that never saw it.</p></div><div class="tag">Regression</div></div>
+  <div class="grid k4" id="prk"></div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>Actual vs predicted</h3><div class="cs">Points on the dashed line are perfect predictions (log scale)</div><div id="p_avp" class="plot tall"></div></div>
+    <div class="card"><h3>Prediction error per record</h3><div class="cs">Predicted − actual, ₹ crore (blue = under-predicted, red = over-predicted)</div><div id="p_res" class="plot tall"></div></div>
+  </div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>Reported festive trade over time</h3><div class="cs">National estimates used to train the model (₹ crore, log scale)</div><div id="p_trade" class="plot"></div><div class="src">Sources: CAIT and other cited publishers (economic_footfall_clean.csv)</div></div>
+    <div class="card"><h3>2026 hold-out test and forecasts</h3><div class="cs">Hold-out = 2026 figures published after training; the model never saw them</div><table id="htab"></table><div id="p_fc" class="plot sm" style="margin-top:10px"></div></div>
+  </div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section class="tab" id="data">
+  <div class="thead"><div><h2>Data &amp; Method</h2><p>Every record traces to a public source; there is no synthetic data.</p></div><div class="tag">Pipeline</div></div>
+  <div class="grid k4" id="dk"></div>
+  <div class="card" style="margin-top:16px"><h3>Pipeline</h3>
+    <div class="steps" style="margin-top:10px">
+      <div class="step"><b>1 · Collect</b><span>RBI holiday matrix scraped for 34 regional offices, 2022–2026 (60 archived pages); Census 2011 C-01; 78 economic figures checked on their source pages.</span></div>
+      <div class="step"><b>2 · Identify</b><span>101 festivals matched by pattern; each festival's tradition and home community taken from its Wikipedia infobox or a Government page.</span></div>
+      <div class="step"><b>3 · Correct</b><span>Sunday correction (RBI lists no Sundays) and shared-date evidence scoring, so no religion, state or festival is under-counted.</span></div>
+      <div class="step"><b>4 · Analyse</b><span>Descriptive statistics, 9 hypothesis tests, K-Means, Random Forest and trade regression with leave-one-out and 2026 hold-out checks.</span></div>
+    </div>
+  </div>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="card"><h3>Sources</h3><div class="list">
+      <b>Reserve Bank of India</b> — Holiday Matrix (rbi.org.in), 2022–2026<br>
+      <b>Census of India 2011</b> — Table C-01, religious community (India and Andhra Pradesh district tables)<br>
+      <b>DoPT</b> — compulsory Central Government holidays, O.M. F.No.12/2/2023-JCA (3 July 2025)<br>
+      <b>Wikipedia / State Government pages</b> — tradition and home community of each festival<br>
+      <b>CAIT, IBEF, AIR, State tourism departments and others</b> — festive trade and footfall figures<br>
+      <b>DataMeet</b> — state boundaries (CC BY 2.5 IN)</div></div>
+    <div class="card"><h3>Limits</h3><div class="list">
+      Only festivals with a bank holiday are counted; restricted and district-level holidays are not.<br>
+      Union territories without an RBI office are not covered.<br>
+      Punjab, Haryana and Chandigarh share one RBI office and appear as one unit.<br>
+      Single-year views show dates as listed by RBI (no Sunday correction); the 2022–26 average is corrected.<br>
+      Trade figures are published estimates, mostly from CAIT; the regression has 15 training records.</div></div>
+  </div>
+</section>
+<footer>Indian Festivals Analytics · DAV Micro Project 2026-27 · Vidyalankar Institute of Technology</footer>
+</main>
+
+<script>
+/*DATA*/
+const TG=D.tg, TC=D.tcolor, ST=D.states, FE=D.fest, M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const FAITH=["hindu","muslim","christian","sikh","buddhist","jain"], FNAME={hindu:"Hindu",muslim:"Muslim",christian:"Christian",sikh:"Sikh",buddhist:"Buddhist",jain:"Jain"};
+const FTG=FAITH.map(f=>TG.indexOf(FNAME[f]));
+const SEQ=["#f4f8fd","#cde2fb","#86b6ef","#3987e5","#256abf","#184f95","#0d366b"];
+const INK="#0b0b0b",INK2="#52514e",GRID="#e4e3df";
+const CFG={displaylogo:false,responsive:true,modeBarButtonsToRemove:["lasso2d","select2d","autoScale2d"]};
+const fmt=(v,d=1)=>Number(v).toLocaleString("en-IN",{minimumFractionDigits:d,maximumFractionDigits:d});
+const crore=v=>"₹"+Number(Math.round(v)).toLocaleString("en-IN")+" cr";
+function L(extra){return Object.assign({font:{family:"Segoe UI, sans-serif",size:12,color:INK2},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",
+  margin:{l:50,r:16,t:10,b:40},hoverlabel:{bgcolor:"#fff",bordercolor:GRID,font:{color:INK,size:12.5}},
+  xaxis:{gridcolor:GRID,zeroline:false,linecolor:GRID},yaxis:{gridcolor:GRID,zeroline:false,linecolor:GRID},
+  legend:{orientation:"h",y:-0.18,font:{size:11.5},traceorder:"normal"},bargap:0.25},extra||{});}
+function fixT(o){for(const k of ["xaxis","yaxis"])if(o[k]&&typeof o[k].title==="string")o[k].title={text:o[k].title,font:{size:12,color:INK2}};return o;}
+const plot=(id,data,layout)=>Plotly.react(id,data,fixT(L(layout)),CFG);
+function seq(t){t=Math.max(0,Math.min(1,t));const p=t*(SEQ.length-1),i=Math.min(Math.floor(p),SEQ.length-2),f=p-i;
+  const a=SEQ[i],b=SEQ[i+1],h=(s,k)=>parseInt(s.substr(1+2*k,2),16);
+  return "#"+[0,1,2].map(k=>Math.round(h(a,k)+(h(b,k)-h(a,k))*f).toString(16).padStart(2,"0")).join("");}
+
+// ---------------- year state + aggregation ----------------
+let YEAR="all";
+const ysel=document.getElementById("yr");
+ysel.innerHTML=`<option value="all">${D.period} avg</option>`+D.years.slice().reverse().map(y=>`<option value="${y}">${y}</option>`).join("");
+function agg(year){
+  const s=ST.length, st=new Float64Array(s), stT=[...Array(s)].map(()=>new Float64Array(TG.length)), mon=[...Array(12)].map(()=>new Float64Array(TG.length)),
+        fe=new Float64Array(FE.length), stF=[...Array(s)].map(()=>new Map()), tg=new Float64Array(TG.length), feS=[...Array(FE.length)].map(()=>new Set());
+  let tot=0;
+  for(const r of D.rows){
+    const w= year==="all" ? r[6] : (r[0]==year ? r[5] : 0); if(!w) continue;
+    const no=ST[r[2]].n_off;
+    tot+=w; st[r[2]]+=w/no; stT[r[2]][r[4]]+=w/no; mon[r[1]-1][r[4]]+=w; fe[r[3]]+=w; tg[r[4]]+=w;
+    stF[r[2]].set(r[3],(stF[r[2]].get(r[3])||0)+w/no); if(r[5]>=0.5) feS[r[3]].add(r[2]);
+  }
+  return {tot,st,stT,mon,fe,stF,tg,feS,perOff:tot/D.n_off};
+}
+const CACHE={}; const A=y=>CACHE[y]||(CACHE[y]=agg(y));
+function ylabel(){return YEAR==="all"?`${D.period} average (Sunday-corrected)`:`${YEAR} (as listed by RBI)`;}
+
+// ---------------- tabs ----------------
+const RENDER={}, dirty={};
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.id===b.dataset.t));
+  show(b.dataset.t);
+});
+function show(id){ if(dirty[id]!==false){RENDER[id]();dirty[id]=false;} else document.querySelectorAll(`#${id} .js-plotly-plot`).forEach(p=>Plotly.Plots.resize(p)); }
+ysel.onchange=()=>{YEAR=ysel.value; Object.keys(RENDER).forEach(k=>dirty[k]=true); show(document.querySelector(".tab.on").id); header();};
+function header(){document.getElementById("hpill").textContent=`${D.period} · ${D.counts.states} States/UTs · ${D.counts.offices} RBI offices · ${D.counts.fest} festivals`;}
+header();
+
+function kpi(label,val,note){return `<div class="card kpi"><div class="kl">${label}</div><div class="kv">${val}</div><div class="kn">${note}</div></div>`;}
+function delta(cur,prev){if(prev==null)return "";const d=100*(cur-prev)/prev;return ` <span class="${d>=0?"up":"down"}">${d>=0?"+":""}${d.toFixed(1)}%</span> vs ${YEAR-1}`;}
+
+// ---------------- OVERVIEW ----------------
+RENDER.ov=()=>{
+  const a=A(YEAR), prev=(YEAR!=="all"&&+YEAR>D.years[0])?A(String(+YEAR-1)):null;
+  document.getElementById("ovsub").textContent="Showing "+ylabel()+". Weighted counts of festival bank holidays across all RBI regional offices.";
+  const order=[...ST.keys()].sort((i,j)=>a.st[j]-a.st[i]), top=order[0];
+  const nF=a.fe.filter(v=>v>0).length, hs=100*a.tg[0]/a.tot;
+  document.getElementById("kpis").innerHTML=
+    kpi("Festival holidays · per office / yr",fmt(a.perOff),(prev?delta(a.perOff,prev.perOff):"Average RBI office, Sunday-corrected"))+
+    kpi("Festivals with a bank holiday",nF,`From ${new Set(FE.filter((f,i)=>a.fe[i]>0).map(f=>f.trad)).size} traditions · ${D.counts.states} States/UTs`)+
+    kpi("Most festival holidays",ST[top].name,`${fmt(a.st[top])} days · lowest: ${ST[order[order.length-1]].name} (${fmt(a.st[order[order.length-1]])})`)+
+    kpi("Best evaluated ML model","Trade regression",`LOO R² = ${D.ml.reg.r2.toFixed(2)} · MAPE ${D.ml.reg.mape.toFixed(0)}% · 2026 hold-out ${D.ml.reg.hold_mape.toFixed(0)}%`);
+  // month stacked
+  plot("p_month",TG.map((t,k)=>({type:"bar",name:t,x:M,y:a.mon.map(m=>m[k]/D.n_off),marker:{color:TC[k],line:{color:"#fff",width:1}},
+     hovertemplate:"<b>%{x}</b> · "+t+"<br>%{y:.2f} days per office<extra></extra>"})),{barmode:"stack",yaxis:{title:"Days per office",gridcolor:GRID},margin:{l:55,r:10,t:10,b:70}});
+  // top states
+  const t12=order.slice(0,12).reverse();
+  document.getElementById("topsub").textContent="Top 12 of "+ST.length+" · "+ylabel();
+  plot("p_top",[{type:"bar",orientation:"h",y:t12.map(i=>ST[i].name),x:t12.map(i=>a.st[i]),marker:{color:t12.map((i,k)=>k>=9?"#0d366b":"#3987e5")},
+     text:t12.map(i=>fmt(a.st[i])),textposition:"outside",cliponaxis:false,textfont:{color:INK2},
+     hovertemplate:"<b>%{y}</b><br>%{x:.1f} festival holidays<extra></extra>"}],{margin:{l:175,r:40,t:10,b:30},xaxis:{gridcolor:GRID,title:"Days per year"}});
+  // share vs population
+  const hol=FTG.map(k=>100*a.tg[k]/a.tot), pop=FAITH.map(f=>D.pop_share[f]);
+  plot("p_share",[{type:"bar",name:"Share of festival holidays",x:FAITH.map(f=>FNAME[f]),y:hol,marker:{color:"#256abf"},text:hol.map(v=>v.toFixed(1)+"%"),textposition:"outside",cliponaxis:false,hovertemplate:"%{x}: %{y:.1f}% of holidays<extra></extra>"},
+                  {type:"bar",name:"Share of population (2011)",x:FAITH.map(f=>FNAME[f]),y:pop,marker:{color:"#cde2fb"},text:pop.map(v=>v.toFixed(1)+"%"),textposition:"outside",cliponaxis:false,hovertemplate:"%{x}: %{y:.1f}% of population<extra></extra>"}],
+       {barmode:"group",yaxis:{title:"%",gridcolor:GRID},margin:{l:45,r:10,t:20,b:60}});
+  // top festivals
+  const fo=[...FE.keys()].sort((i,j)=>a.fe[j]-a.fe[i]).slice(0,15).reverse();
+  plot("p_fest",[{type:"bar",orientation:"h",y:fo.map(i=>FE[i].name),x:fo.map(i=>a.fe[i]/D.n_off),marker:{color:fo.map(i=>TC[TG.indexOf(FE[i].tg)])},
+     customdata:fo.map(i=>[FE[i].trad,FE[i].reach]),hovertemplate:"<b>%{y}</b><br>%{customdata[0]}<br>%{x:.2f} days per office<br>Reach: %{customdata[1]} states / yr<extra></extra>"}],
+     {margin:{l:220,r:20,t:10,b:30},xaxis:{gridcolor:GRID,title:"Days per office"}});
+};
+
+document.getElementById("tleg").innerHTML=TG.map((t,k)=>`<span><span class="dot" style="background:${TC[k]}"></span>${t}</span>`).join("");
+// ---------------- GEO ----------------
+const METRICS=[["tot","Festival holidays per year"],["nf","Distinct festivals"],["div","Holiday diversity (Shannon)"],
+  ...TG.slice(0,6).map((t,k)=>["t"+k,"Share of holidays: "+t]),["cl","K-Means cluster (k = 3)"]];
+const msel=document.getElementById("metric"); msel.innerHTML=METRICS.map(m=>`<option value="${m[0]}">${m[1]}</option>`).join("");
+const ssel=document.getElementById("stsel"); ssel.innerHTML=ST.map((s,i)=>`<option value="${i}">${s.name}</option>`).join("");
+let SEL=ST.findIndex(s=>s.name==="Maharashtra"); ssel.value=SEL;
+msel.onchange=()=>{dirty.geo=true;show("geo");}; ssel.onchange=()=>{SEL=+ssel.value;stateBox();};
+const CLC={"C1":"#86b6ef","C2":"#eb6834","C3":"#1baf7a"};
+function stateVals(a,m){return ST.map((s,i)=>{
+  if(m==="tot")return a.st[i]; if(m==="nf")return [...a.stF[i].values()].filter(v=>v>=0.5).length;
+  if(m==="div"){const v=[...a.stT[i]],t=v.reduce((x,y)=>x+y,0);return -v.filter(x=>x>0).reduce((h,x)=>h+(x/t)*Math.log(x/t),0);}
+  if(m[0]==="t")return 100*a.stT[i][+m.slice(1)]/a.st[i]; return null;});}
+RENDER.geo=()=>{
+  const a=A(YEAR), m=msel.value, mname=METRICS.find(x=>x[0]===m)[1];
+  document.getElementById("maptitle").textContent=mname; document.getElementById("mapsub").textContent=m==="cl"?"Full period, 4 tradition holiday shares (silhouette 0.41)":ylabel();
+  const vals=stateVals(a,m), traces=[], lg=document.getElementById("maplegend");
+  let lo=0,hi=1;
+  if(m!=="cl"){const v=vals.filter(x=>x!=null);lo=Math.min(...v);hi=Math.max(...v);
+    const u=m==="tot"?" days":m[0]==="t"?"%":"";
+    lg.innerHTML=`<div class="ramp" style="background:linear-gradient(90deg,${SEQ.join(",")})"></div><div class="ramplab"><span>${fmt(lo,m==="nf"?0:1)}${u}</span><span>${fmt(hi,m==="nf"?0:1)}${u}</span></div>`;}
+  else{lg.innerHTML=`<div class="legend">${Object.entries(CLC).map(([c,col])=>`<span><span class="dot" style="background:${col}"></span>${Object.keys(D.ml.cl2).length?Object.values(D.ml.cl3).find(n=>n.startsWith(c))||c:c}</span>`).join("")}</div>`;}
+  for(const sh of D.shapes){
+    const i=sh.state?ST.findIndex(s=>s.name===sh.state):-1; let col="#e9e8e4",txt=sh.geo+"<br>No RBI regional office";
+    if(i>=0){ if(m==="cl"){const c=D.ml.cl3[ST[i].name]||"";col=CLC[c.slice(0,2)]||"#ddd";txt=`<b>${ST[i].name}</b><br>${c}`;}
+      else{col=seq((vals[i]-lo)/((hi-lo)||1));txt=`<b>${ST[i].name}</b> (${ST[i].region})<br>${mname}: ${fmt(vals[i],m==="nf"?0:(m==="div"?2:1))}<br>Festival holidays: ${fmt(a.st[i])} / yr<br>RBI offices: ${ST[i].n_off}`;} }
+    traces.push({type:"scatter",mode:"lines",x:sh.x,y:sh.y,fill:"toself",fillcolor:col,line:{color:i===SEL?"#0b0b0b":"#ffffff",width:i===SEL?2:0.8},
+      hoveron:"fills",hoverinfo:"text",text:txt,name:sh.geo,customdata:[i],showlegend:false});
+  }
+  Plotly.react("p_map",traces,L({margin:{l:0,r:0,t:0,b:0},xaxis:{visible:false,fixedrange:false},yaxis:{visible:false,scaleanchor:"x",scaleratio:1.08},hovermode:"closest",dragmode:"pan"}),Object.assign({},CFG,{scrollZoom:true}));
+  const el=document.getElementById("p_map"); el.removeAllListeners&&el.removeAllListeners("plotly_click");
+  el.on("plotly_click",ev=>{const i=D.shapes[ev.points[0].curveNumber].state;const k=ST.findIndex(s=>s.name===i);if(k>=0){SEL=k;ssel.value=k;stateBox();dirty.geo=true;RENDER.geo();dirty.geo=false;}});
+  stateBox();
+  // region box
+  plot("p_region",D.regions.map(r=>{const ix=[...ST.keys()].filter(i=>ST[i].region===r);return {type:"box",name:r,y:ix.map(i=>a.st[i]),text:ix.map(i=>ST[i].name),boxpoints:"all",jitter:0.4,pointpos:0,
+     marker:{color:"#256abf",size:8,line:{color:"#fff",width:1}},line:{color:"#184f95",width:1.5},fillcolor:"rgba(57,135,229,.12)",hovertemplate:"<b>%{text}</b><br>%{y:.1f} days<extra></extra>"};}),
+     {showlegend:false,yaxis:{title:"Festival holidays per year",gridcolor:GRID}});
+  // region mix
+  const rm=D.regions.map(r=>{const ix=[...ST.keys()].filter(i=>ST[i].region===r);const v=TG.map((t,k)=>ix.reduce((s,i)=>s+a.stT[i][k],0));const t=v.reduce((x,y)=>x+y,0);return v.map(x=>100*x/t);});
+  plot("p_regmix",TG.map((t,k)=>({type:"bar",orientation:"h",name:t,y:D.regions,x:rm.map(v=>v[k]),marker:{color:TC[k],line:{color:"#fff",width:1}},hovertemplate:"%{y} · "+t+": %{x:.1f}%<extra></extra>"})),
+     {barmode:"stack",margin:{l:85,r:10,t:10,b:80},xaxis:{range:[0,100],ticksuffix:"%",gridcolor:GRID},yaxis:{autorange:"reversed"}});
+};
+function stateBox(){
+  const a=A(YEAR), i=SEL, s=ST[i];
+  document.getElementById("stname").textContent=s.name;
+  document.getElementById("stregion").textContent=`${s.region} region · ${s.n_off} RBI office${s.n_off>1?"s":""} · population ${(s.pop/1e6).toFixed(1)} M (2011) · ${ylabel()}`;
+  const nf=[...a.stF[i].values()].filter(v=>v>=0.5).length, rank=[...ST.keys()].sort((x,y)=>a.st[y]-a.st[x]).indexOf(i)+1;
+  document.getElementById("stmini").innerHTML=`<div><b>${fmt(a.st[i])}</b><span>holidays / yr</span></div><div><b>${nf}</b><span>regular festivals</span></div><div><b>#${rank}</b><span>of ${ST.length} states</span></div>`;
+  const hol=FTG.map(k=>100*a.stT[i][k]/a.st[i]);
+  plot("p_state",[{type:"bar",name:"Holidays",x:FAITH.map(f=>FNAME[f]),y:hol,marker:{color:"#256abf"},hovertemplate:"%{x}: %{y:.1f}% of holidays<extra></extra>"},
+                  {type:"bar",name:"Population",x:FAITH.map(f=>FNAME[f]),y:FAITH.map(f=>s.census[f]),marker:{color:"#cde2fb"},hovertemplate:"%{x}: %{y:.1f}% of population<extra></extra>"}],
+       {barmode:"group",margin:{l:40,r:10,t:10,b:50},yaxis:{ticksuffix:"%",gridcolor:GRID},legend:{orientation:"h",y:-0.25}});
+  const fl=[...a.stF[i].entries()].filter(e=>e[1]>0).sort((x,y)=>y[1]-x[1]), it=([f,v])=>`<span class="dot" style="background:${TC[TG.indexOf(FE[f].tg)]}"></span>${FE[f].name} <span style="color:#8a8984">(${v.toFixed(2)})</span>`;
+  const reg=fl.filter(e=>e[1]>=0.5), occ=fl.filter(e=>e[1]<0.5);
+  document.getElementById("stfest").innerHTML=reg.map(it).join(" · ")+(occ.length?`<div style="margin-top:8px;font-size:11.5px;color:#8a8984"><b>Occasional or shared-date (&lt; 0.5 day/yr):</b> ${occ.map(([f,v])=>FE[f].name+" ("+v.toFixed(2)+")").join(", ")}</div>`:"");
+}
+
+// ---------------- FESTIVALS ----------------
+const ftr=document.getElementById("ftrad"); ftr.innerHTML=`<option value="">All traditions</option>`+[...new Set(FE.map(f=>f.trad))].sort().map(t=>`<option>${t}</option>`).join("");
+ftr.onchange=()=>ftable(); document.getElementById("fq").oninput=()=>ftable();
+function ftable(){
+  const a=A(YEAR), q=document.getElementById("fq").value.toLowerCase(), t=ftr.value;
+  const ix=[...FE.keys()].filter(i=>(!t||FE[i].trad===t)&&(!q||FE[i].name.toLowerCase().includes(q)||FE[i].states.toLowerCase().includes(q))).sort((i,j)=>a.fe[j]-a.fe[i]||FE[j].reach-FE[i].reach);
+  document.getElementById("ftab").innerHTML=`<tr><th>Festival</th><th>Tradition</th><th>Type</th><th class="n">States / yr</th><th class="n">Days / office<br><small>${YEAR==="all"?"avg":YEAR}</small></th><th>Peak month</th><th>Calendar</th><th class="n">Certainty</th></tr>`+
+    ix.map(i=>{const f=FE[i];return `<tr><td><span class="dot" style="background:${TC[TG.indexOf(f.tg)]}"></span><b>${f.name}</b></td><td>${f.trad}</td><td>${f.type||""}</td><td class="n">${f.reach.toFixed(1)}</td><td class="n">${(a.fe[i]/D.n_off).toFixed(2)}</td><td>${f.month?M[f.month-1]:"–"}</td><td>${f.basis||""}</td><td class="n">${f.ident?f.cert.toFixed(2):`<span style="color:#b3261e">${f.cert.toFixed(2)} ⚑</span>`}</td></tr>`;}).join("");
+}
+RENDER.fest=()=>{
+  const a=A(YEAR);
+  plot("p_heat",[{type:"heatmap",x:M,y:TG,z:TG.map((t,k)=>a.mon.map(m=>m[k]/D.n_off)),colorscale:SEQ.map((c,i)=>[i/(SEQ.length-1),c]),xgap:2,ygap:2,
+    colorbar:{title:{text:"days",side:"right"},thickness:10},hovertemplate:"<b>%{y}</b> · %{x}<br>%{z:.2f} days per office<extra></extra>"}],{margin:{l:190,r:10,t:10,b:30},yaxis:{autorange:"reversed"},xaxis:{showgrid:false}});
+  const tr=[...new Set(FE.map(f=>f.tg))].sort((x,y)=>TG.indexOf(x)-TG.indexOf(y));
+  const n=tr.map(t=>FE.filter(f=>f.tg===t).length), med=tr.map(t=>{const v=FE.filter(f=>f.tg===t).map(f=>f.reach).sort((x,y)=>x-y);return v[Math.floor(v.length/2)];});
+  plot("p_trad",[{type:"bar",orientation:"h",y:tr,x:n,marker:{color:tr.map(t=>TC[TG.indexOf(t)])},text:n.map((v,i)=>`${v} festivals · median ${med[i].toFixed(1)} states`),textposition:"outside",cliponaxis:false,textfont:{size:12,color:INK2},
+    hovertemplate:"<b>%{y}</b><br>%{text}<extra></extra>"}],{margin:{l:190,r:200,t:10,b:40},xaxis:{title:"Number of festivals",gridcolor:GRID},yaxis:{autorange:"reversed"}});
+  ftable();
+};
+
+// ---------------- STATS ----------------
+const fsel=document.getElementById("faith"); fsel.innerHTML=FAITH.map(f=>`<option value="${f}">${FNAME[f]}</option>`).join(""); fsel.onchange=()=>scatter();
+function scatter(){
+  const f=fsel.value, pts=D.scat[f], r=D.t5.find(x=>x.faith===FNAME[f]);
+  document.getElementById("scsub").innerHTML=`Spearman ρ = <b>${r.spearman_rho.toFixed(2)}</b> (95% CI ${r.rho_ci95_low.toFixed(2)} to ${r.rho_ci95_high.toFixed(2)}), Holm p = ${r.p_holm.toFixed(4)}`;
+  const xs=pts.map(p=>p.pop), ys=pts.map(p=>p.hol), n=xs.length, mx=xs.reduce((a,b)=>a+b)/n, my=ys.reduce((a,b)=>a+b)/n;
+  const b=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0)/xs.reduce((s,x)=>s+(x-mx)**2,0), x0=Math.min(...xs), x1=Math.max(...xs);
+  const lab=[...pts.keys()].sort((i,j)=>Math.abs(ys[j]-my)+Math.abs(xs[j]-mx)-Math.abs(ys[i]-my)-Math.abs(xs[i]-mx)).slice(0,5);
+  plot("p_scatter",[{type:"scatter",mode:"lines",x:[x0,x1],y:[my+b*(x0-mx),my+b*(x1-mx)],line:{color:"#86b6ef",width:2,dash:"dot"},name:"OLS fit",hoverinfo:"skip"},
+    {type:"scatter",mode:"markers+text",x:xs,y:ys,text:pts.map((p,i)=>lab.includes(i)?p.s:""),textposition:"top center",textfont:{size:10.5,color:INK2},
+     customdata:pts.map(p=>p.s),marker:{size:10,color:"#256abf",line:{color:"#fff",width:1.5}},name:"State/UT",hovertemplate:"<b>%{customdata}</b><br>Population %{x:.1f}%<br>Holidays %{y:.1f}%<extra></extra>"}],
+    {showlegend:false,xaxis:{title:"Share of population (%)",gridcolor:GRID},yaxis:{title:"Share of festival holidays (%)",gridcolor:GRID}});
+}
+RENDER.st=()=>{
+  document.getElementById("ttab").innerHTML=`<tr><th>ID</th><th>Question</th><th>Test</th><th class="n">Statistic</th><th class="n">df</th><th class="n">p-value</th><th>Result</th><th>Interpretation</th></tr>`+
+    D.tests.map(t=>`<tr><td style="white-space:nowrap"><b>${t.id.replace("holiday_","diversity").replace("hol_days","holidays")}</b></td><td>${t.question}</td><td>${t.test}</td><td class="n">${(+t.statistic).toFixed(3)}</td><td class="n">${t.df===""?"–":(+t.df).toFixed(0)}</td><td class="n">${+t.p_value<0.001?"&lt; 0.001":(+t.p_value).toFixed(3)}</td>
+      <td><span class="badge ${t.result.startsWith("Reject")?"b-rej":"b-fail"}">${t.result}</span></td><td style="color:#52514e;font-size:12px">${t.interpretation}</td></tr>`).join("");
+  scatter();
+  const a=A("all"), obsM=a.mon.map(m=>m.reduce((x,y)=>x+y,0)/D.n_off), e=obsM.reduce((x,y)=>x+y)/12;
+  plot("p_chi",[{type:"bar",name:"Observed",x:M,y:obsM,marker:{color:obsM.map(v=>v>e?"#256abf":"#86b6ef")},hovertemplate:"%{x}: %{y:.2f} days<extra>observed</extra>"},
+     {type:"scatter",mode:"lines",name:"Expected if uniform",x:M,y:M.map(()=>e),line:{color:"#eb6834",width:2,dash:"dash"},hovertemplate:"Expected: %{y:.2f}<extra></extra>"}],
+     {yaxis:{title:"Days per office per year",gridcolor:GRID},legend:{orientation:"h",y:-0.12}});
+  const t5=D.t5.slice().sort((x,y)=>x.spearman_rho-y.spearman_rho);
+  plot("p_rho",[{type:"scatter",mode:"markers",y:t5.map(r=>r.faith),x:t5.map(r=>r.spearman_rho),marker:{size:12,color:"#256abf"},
+     error_x:{type:"data",symmetric:false,array:t5.map(r=>r.rho_ci95_high-r.spearman_rho),arrayminus:t5.map(r=>r.spearman_rho-r.rho_ci95_low),color:"#86b6ef",thickness:2.5,width:0},
+     customdata:t5.map(r=>[r.rho_ci95_low,r.rho_ci95_high,r.p_holm]),hovertemplate:"<b>%{y}</b><br>ρ = %{x:.2f} (CI %{customdata[0]:.2f} to %{customdata[1]:.2f})<br>Holm p = %{customdata[2]:.4f}<extra></extra>"}],
+     {margin:{l:90,r:20,t:10,b:40},xaxis:{range:[-0.2,1],title:"Spearman ρ",gridcolor:GRID,zeroline:true,zerolinecolor:"#bbb"}});
+};
+
+// ---------------- ML ----------------
+RENDER.ml=()=>{
+  const m=D.ml, rf=m.clf.find(c=>c.model==="Random Forest"), base=m.clf.find(c=>c.model.startsWith("Majority"));
+  document.getElementById("mlk").innerHTML=
+    kpi("A · K-Means best k",m.best_k,`Silhouette ${m.sil.toFixed(2)} · bootstrap ARI ${m.ari_boot.toFixed(2)}`)+
+    kpi("B · Random Forest macro-F1",rf.macro_f1_mean.toFixed(2),`vs ${base.macro_f1_mean.toFixed(2)} majority baseline · accuracy ${(100*rf.accuracy_mean).toFixed(0)}%`)+
+    kpi("C · Trade regression R²",m.reg.r2.toFixed(2),`Leave-one-out · in-sample (log) ${m.reg.r2log.toFixed(3)}`)+
+    kpi("C · Implied trade growth",m.reg.growth.toFixed(0)+"% / yr",`Festival fixed effects · n = ${m.reg.n} records`);
+  plot("p_k",[{type:"scatter",mode:"lines+markers",name:"K-Means",x:m.ksel.map(r=>r.k),y:m.ksel.map(r=>r.kmeans_silhouette),line:{color:"#256abf",width:2},marker:{size:9},customdata:m.ksel.map(r=>r.ari_kmeans_vs_ward),hovertemplate:"k = %{x}<br>silhouette %{y:.3f}<br>ARI vs Ward %{customdata:.2f}<extra>K-Means</extra>"},
+              {type:"scatter",mode:"lines+markers",name:"Ward (hierarchical)",x:m.ksel.map(r=>r.k),y:m.ksel.map(r=>r.ward_silhouette),line:{color:"#eb6834",width:2},marker:{size:9},hovertemplate:"k = %{x}<br>silhouette %{y:.3f}<extra>Ward</extra>"}],
+       {xaxis:{title:"k (number of clusters)",dtick:1,gridcolor:GRID},yaxis:{title:"Silhouette",gridcolor:GRID},legend:{orientation:"h",y:-0.22}});
+  document.getElementById("clsub").textContent=`Best k = 2 (silhouette ${m.sil.toFixed(2)}); the k = 3 view (silhouette ${m.sil3.toFixed(2)}) splits off a third group. Clusters do not follow geographic regions (ARI ${m.ari_region.toFixed(3)}).`;
+  const groups={}; Object.entries(m.cl3).forEach(([s,c])=>(groups[c]=groups[c]||[]).push(s));
+  document.getElementById("cllist").innerHTML=Object.entries(groups).sort().map(([c,ss])=>`<p><span class="dot" style="background:${CLC[c.slice(0,2)]}"></span><b>${c}</b> (${ss.length})<br>${ss.sort().join(", ")}</p>`).join("");
+  plot("p_clf",[{type:"bar",x:m.clf.map(c=>c.model),y:m.clf.map(c=>c.macro_f1_mean),marker:{color:m.clf.map(c=>c.model==="Random Forest"?"#0d366b":c.model.startsWith("Majority")?"#c3c2bd":"#3987e5")},
+     error_y:{type:"data",array:m.clf.map(c=>c.macro_f1_sd),color:"#52514e",thickness:1.2,width:5},text:m.clf.map(c=>c.macro_f1_mean.toFixed(2)),textposition:"inside",insidetextanchor:"end",textfont:{color:"#fff"},
+     customdata:m.clf.map(c=>[c.accuracy_mean,c.macro_precision_mean,c.macro_recall_mean]),hovertemplate:"<b>%{x}</b><br>macro-F1 %{y:.3f}<br>accuracy %{customdata[0]:.3f}<br>precision %{customdata[1]:.3f} · recall %{customdata[2]:.3f}<extra></extra>"}],
+     {yaxis:{title:"Macro-F1",range:[0,0.7],gridcolor:GRID}});
+  const im=m.imp.slice().reverse();
+  plot("p_imp",[{type:"bar",orientation:"h",y:im.map(r=>r.feature.replace(/_/g," ")),x:im.map(r=>r.importance),marker:{color:"#256abf"},hovertemplate:"%{y}: %{x:.3f}<extra></extra>"}],
+     {margin:{l:170,r:20,t:10,b:40},xaxis:{title:"Importance",gridcolor:GRID}});
+  const cls=m.pcr.filter(r=>!/avg|accuracy/i.test(r.class));
+  plot("p_pcr",["precision","recall","f1"].map((k,j)=>({type:"bar",name:k==="f1"?"F1":k[0].toUpperCase()+k.slice(1),x:cls.map(r=>r.class.replace(/ \(.*\)/,"")),y:cls.map(r=>r[k]),
+     marker:{color:["#86b6ef","#3987e5","#0d366b"][j]},customdata:cls.map(r=>r.support),hovertemplate:"%{x}<br>"+k+" %{y:.2f}<br>n = %{customdata}<extra></extra>"})),
+     {barmode:"group",yaxis:{range:[0,1],gridcolor:GRID},legend:{orientation:"h",y:-0.25},margin:{l:40,r:10,t:10,b:60}});
+};
+
+// ---------------- PREDICTIONS ----------------
+RENDER.pr=()=>{
+  const r=D.ml.reg, lo=D.ml.loo;
+  document.getElementById("prk").innerHTML=
+    kpi("MAE",crore(r.mae),"Mean absolute error, leave-one-out")+kpi("RMSE",crore(r.rmse),"Root mean squared error")+
+    kpi("R² · MAPE",`${r.r2.toFixed(2)} · ${r.mape.toFixed(0)}%`,"Variance explained · mean % error")+
+    kpi("Paired t-test",`p = ${r.p.toFixed(2)}`,`t = ${r.t.toFixed(2)}, df = ${r.df}, log scale · no systematic bias`);
+  const fs=[...new Set(lo.map(x=>x.festival))], col=["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#4a3aa7"];
+  const mn=Math.min(...lo.map(x=>Math.min(x.actual,x.loo_predicted)))*0.7, mx=Math.max(...lo.map(x=>Math.max(x.actual,x.loo_predicted)))*1.3;
+  plot("p_avp",[{type:"scatter",mode:"lines",x:[mn,mx],y:[mn,mx],line:{color:"#8a8984",dash:"dash",width:1.5},hoverinfo:"skip",showlegend:false},
+     ...fs.map((f,k)=>{const p=lo.filter(x=>x.festival===f);return {type:"scatter",mode:"markers",name:f,x:p.map(x=>x.actual),y:p.map(x=>x.loo_predicted),customdata:p.map(x=>x.year),
+       marker:{size:11,color:col[k%col.length],line:{color:"#fff",width:1.5}},hovertemplate:"<b>"+f+" %{customdata}</b><br>Actual ₹%{x:,.0f} cr<br>Predicted ₹%{y:,.0f} cr<extra></extra>"};})],
+     {xaxis:{type:"log",title:"Actual (₹ crore)",gridcolor:GRID},yaxis:{type:"log",title:"Predicted (₹ crore)",gridcolor:GRID},legend:{orientation:"h",y:-0.2}});
+  const so=lo.slice().sort((a,b)=>a.err-b.err);
+  plot("p_res",[{type:"bar",orientation:"h",y:so.map(x=>x.festival.replace(" (Deepavali)","")+" "+x.year),x:so.map(x=>x.err),marker:{color:so.map(x=>x.err<0?"#256abf":"#e34948")},
+     customdata:so.map(x=>[x.actual,x.loo_predicted,100*x.err/x.actual]),hovertemplate:"<b>%{y}</b><br>Actual ₹%{customdata[0]:,.0f} cr<br>Predicted ₹%{customdata[1]:,.0f} cr<br>Error %{customdata[2]:+.0f}%<extra></extra>"}],
+     {margin:{l:150,r:20,t:10,b:40},xaxis:{title:"Error (₹ crore)",gridcolor:GRID,zeroline:true,zerolinecolor:"#999"}});
+  const tf=[...new Set(D.trade.map(x=>x.festival))];
+  plot("p_trade",tf.map((f,k)=>{const p=D.trade.filter(x=>x.festival===f);return {type:"scatter",mode:"lines+markers",name:f,x:p.map(x=>x.year),y:p.map(x=>x.value_inr_crore),
+     line:{color:col[k%col.length],width:2},marker:{size:8},customdata:p.map(x=>x.publisher),hovertemplate:"<b>"+f+" %{x}</b><br>₹%{y:,.0f} cr<br>%{customdata}<extra></extra>"};}),
+     {yaxis:{type:"log",title:"₹ crore",gridcolor:GRID},xaxis:{dtick:1,gridcolor:GRID},legend:{orientation:"h",y:-0.2}});
+  document.getElementById("htab").innerHTML=`<tr><th>Festival 2026</th><th class="n">Published</th><th class="n">Predicted</th><th class="n">Error</th></tr>`+
+    D.ml.hold.map(h=>`<tr><td><b>${h.festival}</b></td><td class="n">${crore(h.value)}</td><td class="n">${crore(h.predicted_inr_crore)}</td><td class="n">${h.abs_pct_error.toFixed(1)}%</td></tr>`).join("");
+  const fc=D.ml.fc.slice().sort((a,b)=>a.forecast_inr_crore-b.forecast_inr_crore);
+  plot("p_fc",[{type:"bar",orientation:"h",y:fc.map(x=>x.festival),x:fc.map(x=>x.forecast_inr_crore),marker:{color:"#3987e5"},text:fc.map(x=>crore(x.forecast_inr_crore)),textposition:"outside",cliponaxis:false,textfont:{color:INK2},
+     hovertemplate:"<b>%{y}</b><br>2026 forecast ₹%{x:,.0f} cr<extra></extra>"}],{margin:{l:150,r:90,t:24,b:30},xaxis:{gridcolor:GRID,showticklabels:false},
+     title:{text:"2026 model forecasts (₹ crore)",font:{size:13,color:INK},x:0,xanchor:"left"}});
+};
+
+// ---------------- DATA ----------------
+RENDER.data=()=>{
+  const c=D.counts;
+  document.getElementById("dk").innerHTML=kpi("Holiday observations",c.obs.toLocaleString("en-IN"),`Cleaned from ${c.raw.toLocaleString("en-IN")} raw RBI rows`)+
+    kpi("Festivals × traditions",`${c.fest} × 9`,`${c.uncertain} flagged as uncertain reach`)+
+    kpi("Geography",`${c.states} States/UTs`,`${c.offices} RBI regional offices, ${D.period}`)+
+    kpi("Economic records",c.eco,"Each checked on its source page");
+};
+
+show("ov");
+</script>
+</body>
+</html>

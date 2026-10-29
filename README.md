@@ -1,6 +1,6 @@
 # Socio-Economic & Demographic Analysis of Indian Festivals
 
-DAV team project by Jainam Jain (23108B0084), Vrushan Patil, Dhanush Chowke, Aditya Tambe and Vivek Jaiswal, B.E. Sem VII ECS, VIT. The brief is in `project details.PDF`.
+DAV team project by Jainam Jain (23108B0084), Vrushan Patil (23108B0079), Dhanush Chowke (23108B0080), Aditya Tambe (23108B0077) and Vivek Jaiswal (23108B0082), B.E. Sem VII ECS, VIT. The brief is in `project details.PDF`.
 
 ## Deliverables map
 
@@ -20,6 +20,7 @@ DAV team project by Jainam Jain (23108B0084), Vrushan Patil, Dhanush Chowke, Adi
 | 4 Blog | Engagement audit | `blog/engagement/` |
 | 5 Video | Synthesis video | `video/Indian_Festivals_Project_Report.mp4` (1080p, about 5.4 min) |
 | 5 Video | Script and slides | `narration_script.md`, `slides/` |
+| All | Interactive dashboard (offline, single file) | `dashboard/India_Festivals_Dashboard.html` (built by `code/15_dashboard.py` from `code/dashboard_template.html`) |
 | All | Project report | `report/DAV Project Report_23108B0084.pdf` / `.docx` |
 
 ## Reproduce
